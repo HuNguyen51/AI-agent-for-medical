@@ -1,0 +1,17 @@
+[project]
+name = "Local-LLM-Server"
+version = "0.1.0"
+description = "Server for llm - Brain of Agent"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi",
+    "uvicorn",
+    "pydantic",
+    "transformers",
+    "torch"
+]
+
+[build-system]
+requires = ["setuptools>=61.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
