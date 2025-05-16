@@ -1,0 +1,17 @@
+[project]
+name = "Vector-DB-Server"
+version = "0.1.0"
+description = "Server for vector database"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "langchain-community>=0.3.24",
+    "langchain-chroma>=0.1.2",
+    "sentence-transformers>=4.1.0",
+    "pypdf>=5.5.0",
+    "langchain-huggingface>=0.2.0"
+]
+
+[build-system]
+requires = ["setuptools>=61.0.0", "wheel"]
+build-backend = "setuptools.build_meta"

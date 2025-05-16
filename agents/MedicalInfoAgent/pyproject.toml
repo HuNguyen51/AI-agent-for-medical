@@ -1,0 +1,30 @@
+[project]
+name = "Medical-Info-Agent"
+version = "0.1.1"
+description = "Medical Agent using LangGraph with A2A Protocol"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "a2a-require-lib",
+    "click>=8.1.8",
+    "httpx>=0.28.1",
+    "langchain-google-genai>=2.0.10",
+    "langgraph>=0.3.18",
+    "pydantic>=2.10.6",
+    "python-dotenv>=1.1.0",
+    "langchain-openai",
+    "langchain-community",
+    "sse-starlette",
+    "jwt",
+    "jwcrypto"
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["."]
+
+[tool.uv.sources]
+a2a-require-lib = { workspace = true }
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

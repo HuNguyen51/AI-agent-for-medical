@@ -1,0 +1,7 @@
+.venv/
+__pychache__/
+.env
+vector_db_server.egg-info/
+build/
+vectorstore/
+tmp/

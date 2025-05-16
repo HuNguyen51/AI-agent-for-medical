@@ -1,0 +1,1 @@
+Server để lưu trữ các vector được tạo từ dữ liệu của mình.

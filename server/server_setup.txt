@@ -1,6 +1,0 @@
-fastapi
-uvicorn
-pydantic
-transformers
-torch
-accelerate
