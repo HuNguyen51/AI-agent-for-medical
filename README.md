@@ -38,19 +38,15 @@ The following example will run the langgraph agent with the python CLI host:
 
 1. Navigate to the agent directory:
     ```bash
-    cd samples/python/agents/langgraph
     ```
 2. Run an agent:
     ```bash
-    uv run .
     ```
 3. In another terminal, navigate to the CLI directory:
     ```bash
-    cd samples/python/hosts/cli
     ```
 4. Run the example client
     ```
-    uv run .
     ```
 ---
 **NOTE:** 
