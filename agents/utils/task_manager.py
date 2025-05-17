@@ -4,7 +4,8 @@ import traceback
 
 from collections.abc import AsyncIterable
 
-from agents.MedicalInfoAgent.agent import MedicalInfoAgent
+from agents.utils.master_agent import MasterAgent
+
 from common.server import utils
 from common.server.task_manager import InMemoryTaskManager
 from common.types import (
@@ -36,7 +37,7 @@ logger = logging.getLogger(__name__)
 class AgentTaskManager(InMemoryTaskManager):
     def __init__(
         self,
-        agent: MedicalInfoAgent,
+        agent: MasterAgent,
         notification_sender_auth: PushNotificationSenderAuth,
     ):
         super().__init__()
@@ -108,12 +109,12 @@ class AgentTaskManager(InMemoryTaskManager):
         task_send_params: TaskSendParams = request.params
         if not utils.are_modalities_compatible(
             task_send_params.acceptedOutputModes,
-            MedicalInfoAgent.SUPPORTED_CONTENT_TYPES,
+            self.agent.SUPPORTED_CONTENT_TYPES,
         ):
             logger.warning(
                 'Unsupported output mode. Received %s, Support %s',
                 task_send_params.acceptedOutputModes,
-                MedicalInfoAgent.SUPPORTED_CONTENT_TYPES,
+                self.agent.SUPPORTED_CONTENT_TYPES,
             )
             return utils.new_incompatible_types_error(request.id)
 

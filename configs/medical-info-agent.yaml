@@ -1,6 +1,8 @@
 host: localhost
 port: 10000
 
+agent_brain: gemini-2.0-flash 
+
 skills:
     -   id: retrieve_medical_data
         name: Trợ lý y tế
@@ -37,6 +39,10 @@ retriever_system:
 retriever_tool:
     name: medical_retriever
     description: Công cụ hữu ích trong việc tìm kiếm thông tin về sức khoẻ, y tế, bệnh thông dụng trong tài liệu liên quan.
+
+SUPPORTED_CONTENT_TYPES: 
+    - text
+    - text/plain
 
 SYSTEM_INSTRUCTIONS: 
     - Bạn là một trợ lý hữu ích trong lĩnh vực y tế và sức khoẻ.
