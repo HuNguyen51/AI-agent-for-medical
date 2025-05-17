@@ -93,9 +93,9 @@ if __name__ == "__main__":
 
 
     embedding_function = HuggingFaceEmbeddings(
-        model_name=configs['model_name'],
-        model_kwargs=configs['model_kwargs'],
-        encode_kwargs=configs['encode_kwargs']
+        model_name=configs['embedding']['model_name'],
+        model_kwargs=configs['embedding']['model_kwargs'],
+        encode_kwargs=configs['embedding']['encode_kwargs']
     )
 
     vdb = VectorDB(Chroma, embedding_function, configs['chunk_size'], configs['chunk_overlap'])
