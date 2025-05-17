@@ -5,3 +5,4 @@ vector_db_server.egg-info/
 build/
 vectorstore/
 tmp/
+data/
