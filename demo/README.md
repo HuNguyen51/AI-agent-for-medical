@@ -16,7 +16,6 @@
 
 ### Thêm Agent một cách linh hoạt
 
-Clicking on the robot icon in the web app lets you add new agents. Enter the address of the remote agent's AgentCard and the app will fetch the card and add the remote agent to the local set of known agents.
 Nhấp vào biểu tượng robot trong ứng dụng web cho phép bạn thêm các Agent mới. Nhập địa chỉ AgentCard của remote agent và ứng dụng sẽ lấy card và thêm remote agent đó vào danh sách các agents cục bộ.
 
 ### Giao tiếp với một hoặc nhiều Agents
