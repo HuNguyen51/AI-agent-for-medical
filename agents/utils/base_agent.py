@@ -45,7 +45,7 @@ class AgentWithRAGTool:
             )
         
         # Tạo vectorstore
-        vectordb = Chroma(persist_directory=self.__configs['vectorstore_path'], embedding_function=embedding_function)
+        vectordb = Chroma(persist_directory=self.__configs['agent_vectorstore'], embedding_function=embedding_function)
         
         # Tạo retriever
         base_retriever = vectordb.as_retriever()

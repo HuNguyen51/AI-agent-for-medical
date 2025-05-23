@@ -1,322 +1,101 @@
-# LangGraph Currency Agent with A2A Protocol
+# AI Agents với Giao thức A2A
 
-This sample demonstrates a currency conversion agent built with [LangGraph](https://langchain-ai.github.io/langgraph/) and exposed through the A2A protocol. It showcases conversational interactions with support for multi-turn dialogue and streaming responses.
+Các AI Agents được xây dựng bằng [LangGraph](https://langchain-ai.github.io/langgraph/) thông qua giao thức A2A. Nó trình bày các tương tác đàm thoại với hỗ trợ cho đối thoại nhiều lượt và phản hồi dạng streaming. Ta sẽ áp dụng giao thức này để tạo ra nhiều Agent con, mỗi Agent con có nhiều skill và chức năng riêng biệt để hỗ trợ cho Agent chính, Agent chính sẽ có chức năng điều hướng các tác vụ cho các Agent con để thực hiện các chức năng và phản hồi lại kết quả.
 
-## How It Works
+## Cơ cấu hoạt động
 
-This agent uses LangGraph with Google Gemini to provide currency exchange information through a ReAct agent pattern. The A2A protocol enables standardized interaction with the agent, allowing clients to send requests and receive real-time updates.
+Tác nhân này sử dụng LangGraph với Google Gemini để cung cấp thông tin trao đổi thông qua ReAct agent pattern. Giao thức A2A cho phép tương tác chuẩn hóa với Agent, cho phép user gửi yêu cầu và nhận cập nhật theo thời gian thực.
+
+Ví dụ cơ bản về cách giao thức A2A chạy với PersonalInfoAgent:
 
 ```mermaid
 sequenceDiagram
     participant Client as A2A Client
     participant Server as A2A Server
     participant Agent as LangGraph Agent
-    participant API as Frankfurter API
+    participant Retriever as LangChain Retriever
 
-    Client->>Server: Send task with currency query
-    Server->>Agent: Forward query to currency agent
+    Client->>Server: Gửi task truy vấn dữ liệu
+    Server->>Agent:  Chuyển tiếp task tới Agent cá nhân
 
     alt Complete Information
-        Agent->>API: Call get_exchange_rate tool
-        API->>Agent: Return exchange rate data
-        Agent->>Server: Process data & return result
-        Server->>Client: Respond with currency information
+        Agent->>Retriever: Gọi personal_data_retriever_tool
+        Retriever->>Agent: Trả về thông tin truy vấn được
+        Agent->>Server: Xử lý dữ liệu rồi trả về kết quả
+        Server->>Client: Phản hồi dựa trên thông tin đã truy vấn
     else Incomplete Information
-        Agent->>Server: Request additional input
-        Server->>Client: Set state to "input-required"
-        Client->>Server: Send additional information
-        Server->>Agent: Forward additional info
-        Agent->>API: Call get_exchange_rate tool
-        API->>Agent: Return exchange rate data
-        Agent->>Server: Process data & return result
-        Server->>Client: Respond with currency information
-    end
-
-    alt With Streaming
-        Note over Client,Server: Real-time status updates
-        Server->>Client: "Looking up exchange rates..."
-        Server->>Client: "Processing exchange rates..."
-        Server->>Client: Final result
+        Agent->>Server: Yêu cầu bổ sung thông tin
+        Server->>Client: Đặt trạng thái "input-required"
+        Client->>Server: Gửi thông tin bổ sung
+        Server->>Agent: Chuyển tiếp thông tin
+        Agent->>Retriever: Gọi personal_data_retriever_tool
+        Retriever->>Agent: Trả về thông tin truy vấn được
+        Agent->>Server: Xử lý dữ liệu rồi trả về kết quả
+        Server->>Client: Phản hồi dựa trên thông tin đã truy vấn
     end
 ```
 
 ## Key Features
 
-- **Multi-turn Conversations**: Agent can request additional information when needed
-- **Real-time Streaming**: Provides status updates during processing
-- **Push Notifications**: Support for webhook-based notifications
-- **Conversational Memory**: Maintains context across interactions
-- **Currency Exchange Tool**: Integrates with Frankfurter API for real-time rates
+- **Multi-turn Conversations**: Agent có thể yêu cầu thông tin bổ sung khi cần thiết
+- **Real-time Streaming**: Cung cấp trạng thái cập nhật liên tục trong quá trình xử lý
+- **Push Notifications**: Hỗ trợ thông báo dựa trên
+- **Conversational Memory**: Duy trì ngữ cảnh trong các tương tác giữa các Agents
+- **Data Retriever Tool**: Sử dụng Retriever để truy xuất các thông tin liên quan có tồn tại trong documents để phản hồi cho user
 
 ## Prerequisites
 
-- Python 3.13 or higher
+- Python 3.13 hoặc cao hơn
 - [UV](https://docs.astral.sh/uv/)
-- Access to an LLM and API Key
+- API Key cho LLM
 
 ## Setup & Running
 
-1. Navigate to the samples directory:
+1. Thư mục hiện hành sẽ là thư mục gốc.
 
-   ```bash
-   cd samples/python/agents/langgraph
-   ```
-
-2. Create an environment file with your API key:
+2. Tạo file môi trường chứa API_KEY:
 
    ```bash
    echo "GOOGLE_API_KEY=your_api_key_here" > .env
    ```
 
-3. Run the agent:
+3. Chạy Agent:
 
    ```bash
-   # Basic run on default port 10000
-   uv run .
-
-   # On custom host/port
-   uv run . --host 0.0.0.0 --port 8080
+   python agents/<agent_to_run>/__main__.py
    ```
 
-4. In a separate terminal, run an A2A [client](/samples/python/hosts/README.md):
+  Url và port tuỳ vào configs/*-agent.yaml. Ví dụ: http://localhost:10000
+
+  Có nhiều Agent thì sẽ chạy nhiều file với các host và port khác nhau.
+
+4. Chạy [UI](/demo/README.md) để tương tác với các Agents :
 
    ```bash
-   cd samples/python/hosts/cli
-   uv run .
+   python demo/ui/main.py
    ```
 
-## Technical Implementation
+Có thể dụng `uv run .` thay cho `python <file>.py` trong quá trình sử dụng.
 
-- **LangGraph ReAct Agent**: Uses the ReAct pattern for reasoning and tool usage
-- **Streaming Support**: Provides incremental updates during processing
-- **Checkpoint Memory**: Maintains conversation state between turns
-- **Push Notification System**: Webhook-based updates with JWK authentication
-- **A2A Protocol Integration**: Full compliance with A2A specifications
+## Triển khai
 
-## Limitations
+- **LangGraph ReAct Agent**: Sử dụng ReAct pattern cho việc suy luận và sử dụng tools
+- **Streaming Support**: Cung cấp incremental updates trong quá trình xử lý
+- **Checkpoint Memory**: Duy trì trạng thái hội thoại giữa các lượt
+- **Push Notification System**: Cập nhật dựa trên webhook với xác thực JWK
+- **A2A Protocol Integration**: Tuân thủ các thông số kỹ thuật của A2A
 
-- Only supports text-based input/output (no multi-modal support)
-- Uses Frankfurter API which has limited currency options
-- Memory is session-based and not persisted between server restarts
+## Hạn chế
 
-## Examples
+- Chỉ hỗ trợ đầu vào/đầu ra văn bản (không hỗ trợ multi-modal)
+- Memory dùng trong session, không được lưu lại nên dữ liệu sẽ mất giữa các lần khởi động
 
-**Synchronous request**
+## Demo conversation
 
-Request:
-
-```
-POST http://localhost:10000
-Content-Type: application/json
-
-{
-  "jsonrpc": "2.0",
-  "id": 11,
-  "method": "tasks/send",
-  "params": {
-    "id": "129",
-    "sessionId": "8f01f3d172cd4396a0e535ae8aec6687",
-    "acceptedOutputModes": [
-      "text"
-    ],
-    "message": {
-      "role": "user",
-      "parts": [
-        {
-          "type": "text",
-          "text": "How much is the exchange rate for 1 USD to INR?"
-        }
-      ]
-    }
-  }
-}
-```
-
-Response:
-
-```
-{
-  "jsonrpc": "2.0",
-  "id": 11,
-  "result": {
-    "id": "129",
-    "status": {
-      "state": "completed",
-      "timestamp": "2025-04-02T16:53:29.301828"
-    },
-    "artifacts": [
-      {
-        "parts": [
-          {
-            "type": "text",
-            "text": "The exchange rate for 1 USD to INR is 85.49."
-          }
-        ],
-        "index": 0
-      }
-    ],
-    "history": []
-  }
-}
-```
-
-**Multi-turn example**
-
-Request - Seq 1:
-
-```
-POST http://localhost:10000
-Content-Type: application/json
-
-{
-  "jsonrpc": "2.0",
-  "id": 10,
-  "method": "tasks/send",
-  "params": {
-    "id": "130",
-    "sessionId": "a9bb617f2cd94bd585da0f88ce2ddba2",
-    "acceptedOutputModes": [
-      "text"
-    ],
-    "message": {
-      "role": "user",
-      "parts": [
-        {
-          "type": "text",
-          "text": "How much is the exchange rate for 1 USD?"
-        }
-      ]
-    }
-  }
-}
-```
-
-Response - Seq 2:
-
-```
-{
-  "jsonrpc": "2.0",
-  "id": 10,
-  "result": {
-    "id": "130",
-    "status": {
-      "state": "input-required",
-      "message": {
-        "role": "agent",
-        "parts": [
-          {
-            "type": "text",
-            "text": "Which currency do you want to convert to? Also, do you want the latest exchange rate or a specific date?"
-          }
-        ]
-      },
-      "timestamp": "2025-04-02T16:57:02.336787"
-    },
-    "history": []
-  }
-}
-```
-
-Request - Seq 3:
-
-```
-POST http://localhost:10000
-Content-Type: application/json
-
-{
-  "jsonrpc": "2.0",
-  "id": 10,
-  "method": "tasks/send",
-  "params": {
-    "id": "130",
-    "sessionId": "a9bb617f2cd94bd585da0f88ce2ddba2",
-    "acceptedOutputModes": [
-      "text"
-    ],
-    "message": {
-      "role": "user",
-      "parts": [
-        {
-          "type": "text",
-          "text": "CAD"
-        }
-      ]
-    }
-  }
-}
-```
-
-Response - Seq 4:
-
-```
-{
-  "jsonrpc": "2.0",
-  "id": 10,
-  "result": {
-    "id": "130",
-    "status": {
-      "state": "completed",
-      "timestamp": "2025-04-02T16:57:40.033328"
-    },
-    "artifacts": [
-      {
-        "parts": [
-          {
-            "type": "text",
-            "text": "The current exchange rate is 1 USD = 1.4328 CAD."
-          }
-        ],
-        "index": 0
-      }
-    ],
-    "history": []
-  }
-}
-```
-
-**Streaming example**
-
-Request:
-
-```
-{
-  "jsonrpc": "2.0",
-  "id": 12,
-  "method": "tasks/sendSubscribe",
-  "params": {
-    "id": "131",
-    "sessionId": "cebd704d0ddd4e8aa646aeb123d60614",
-    "acceptedOutputModes": [
-      "text"
-    ],
-    "message": {
-      "role": "user",
-      "parts": [
-        {
-          "type": "text",
-          "text": "How much is 100 USD in GBP?"
-        }
-      ]
-    }
-  }
-}
-```
-
-Response:
-
-```
-data: {"jsonrpc":"2.0","id":12,"result":{"id":"131","status":{"state":"working","message":{"role":"agent","parts":[{"type":"text","text":"Looking up the exchange rates..."}]},"timestamp":"2025-04-02T16:59:34.578939"},"final":false}}
-
-data: {"jsonrpc":"2.0","id":12,"result":{"id":"131","status":{"state":"working","message":{"role":"agent","parts":[{"type":"text","text":"Processing the exchange rates.."}]},"timestamp":"2025-04-02T16:59:34.737052"},"final":false}}
-
-data: {"jsonrpc":"2.0","id":12,"result":{"id":"131","artifact":{"parts":[{"type":"text","text":"Based on the current exchange rate, 1 USD is equivalent to 0.77252 GBP. Therefore, 100 USD would be approximately 77.252 GBP."}],"index":0,"append":false}}}
-
-data: {"jsonrpc":"2.0","id":12,"result":{"id":"131","status":{"state":"completed","timestamp":"2025-04-02T16:59:35.331844"},"final":true}}
-```
+![image](./a2a_demo_conversation.jpeg)
 
 ## Learn More
 
 - [A2A Protocol Documentation](https://google.github.io/A2A/#/documentation)
 - [LangGraph Documentation](https://langchain-ai.github.io/langgraph/)
-- [Frankfurter API](https://www.frankfurter.app/docs/)
 - [Google Gemini API](https://ai.google.dev/gemini-api)

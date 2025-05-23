@@ -1,13 +1,13 @@
 ## Hosts
 
-Sample apps or agents that are A2A clients that work with A2A servers. 
+Ứng dụng mẫu hoặc agent là A2A client hoạt động với A2A server.
 
-* [CLI](/samples/python/hosts/cli)  
-  Command line tool to interact with an A2A server. Specify the server location on the command line. The CLI client looks up the agent card and then performs task completion in a loop based on command line inputs. 
+* [CLI](/hosts/cli)  
+  Công cụ dòng lệnh để tương tác với A2A server. Chỉ định địa chỉ server trên dòng lệnh. CLI client tìm kiếm agent card và thực hiện hoàn thành nhiệm vụ trong một vòng lặp dựa trên đầu vào dòng lệnh.
 
-* [Orchestrator Agent](/samples/python/hosts/multiagent)  
-An Agent that speaks A2A and can delegate tasks to remote agents. Built on the Google ADK for demonstration purposes. Includes a "Host Agent" that maintains a collection of "Remote Agents". The Host Agent is itself an agent and can delegate tasks to one or more Remote Agents. Each RemoteAgent is an A2AClient that delegates to an A2A Server. 
+* [Orchestrator Agent](hosts/multiagent)  
+Agent giao tiếp A2A và có thể chuyển giao nhiệm vụ cho remote agent. Được xây dựng trên Google ADK cho mục đích trình diễn. Bao gồm một "Host Agent" duy trì tập hợp các "Remote Agent". Host Agent bản thân nó là một agent và có thể chuyển giao nhiệm vụ cho một hoặc nhiều Remote Agent. Mỗi Remote Agent là một A2AClient chuyển giao đến A2A Server.
 
 * [MultiAgent Web Host](/demo/README.md)  
-*This lives in the [demo](/demo/README.md) directory*  
-A web app that visually shows A2A conversations with multiple agents (using the [Orchestrator Agent](/samples/python/hosts/multiagent)). Will render text, image, and webform artifacts. Has a separate tab to visualize task state and history as well as known agent cards. 
+*Nằm trong đường dẫn [demo](/demo/README.md)*  
+Ứng dụng web hiển thị trực quan các cuộc trò chuyện A2A với nhiều agent (sử dụng [Orchestrator Agent](/hosts/multiagent)). Hiển thị văn bản, hình ảnh và webform artifact. Có tab riêng để trực quan hóa trạng thái nhiệm vụ, lịch sử và các agent card đã biết.

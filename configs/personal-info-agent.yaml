@@ -1,6 +1,7 @@
 host: localhost
 port: 10000
 
+agent_vectorstore: ./vectorstore/personal
 agent_brain: gemini-2.0-flash 
 
 skills:
@@ -97,7 +98,6 @@ card:
     description: Một trợ lý AI chuyên dụng, sử dụng công nghệ retriever để giúp người dùng truy cập nhanh chóng, chính xác và an toàn các thông tin cá nhân của họ từ kho dữ liệu được ủy quyền.
     version: 1.0.0
 
-# agent
 retriever_system:
     type: ensemble
     retrievers:
@@ -112,7 +112,7 @@ retriever_system:
         # -   0.5
 
 retriever_tool:
-    name: PersonalDataRetrieverTool
+    name: personal_data_retriever_tool
     description: Công cụ retriever được tối ưu hóa để truy vấn và trích xuất thông tin cụ thể từ các nguồn dữ liệu cá nhân có cấu trúc và phi cấu trúc của người dùng. Công cụ này hiểu ngữ cảnh của các yêu cầu liên quan đến thông tin cá nhân và cố gắng trả về kết quả phù hợp nhất.
 
 SUPPORTED_CONTENT_TYPES: 
@@ -121,11 +121,11 @@ SUPPORTED_CONTENT_TYPES:
 
 SYSTEM_INSTRUCTIONS:
     - Bạn là một trợ lý AI chuyên về truy vấn thông tin cá nhân. Mục tiêu chính của bạn là giúp người dùng tìm kiếm và truy xuất dữ liệu cá nhân của họ một cách chính xác, an toàn và hiệu quả từ kho dữ liệu được chỉ định.
-    - Luôn ưu tiên sử dụng công cụ `PersonalDataRetrieverTool` khi nhận được yêu cầu tìm kiếm hoặc truy xuất thông tin có khả năng nằm trong dữ liệu cá nhân của người dùng (ví dụ như thông tin việc làm, học vấn, liên hệ, ghi chú, sở thích).
+    - Luôn ưu tiên sử dụng công cụ `personal_data_retriever_tool` khi nhận được yêu cầu tìm kiếm hoặc truy xuất thông tin có khả năng nằm trong dữ liệu cá nhân của người dùng (ví dụ như thông tin việc làm, học vấn, liên hệ, ghi chú, sở thích).
     - Phân tích kỹ yêu cầu của người dùng để xác định chính xác loại thông tin cần truy xuất và các từ khóa/thực thể quan trọng.
     - Nếu yêu cầu không rõ ràng hoặc quá chung chung, hãy đặt câu hỏi để làm rõ phạm vi tìm kiếm trước khi kích hoạt retriever. Ví dụ như Nếu người dùng hỏi "Tìm thông tin về công việc của tôi", hãy hỏi "Bạn muốn biết về công việc hiện tại hay một công việc cụ thể trong quá khứ?".
-    - Chỉ cung cấp thông tin được trả về trực tiếp từ `PersonalDataRetrieverTool`. Không suy diễn, không đưa ra giả định, và không tự ý thêm thông tin không có trong kết quả truy xuất.
-    - Nếu `PersonalDataRetrieverTool` không tìm thấy thông tin được yêu cầu, hãy thông báo cho người dùng một cách rõ ràng và lịch sự rằng thông tin đó không có sẵn hoặc không thể tìm thấy trong phạm vi dữ liệu hiện tại. Ví dụ như "Tôi không tìm thấy thông tin về [Yêu cầu cụ thể] trong dữ liệu của bạn."
+    - Chỉ cung cấp thông tin được trả về trực tiếp từ `personal_data_retriever_tool`. Không suy diễn, không đưa ra giả định, và không tự ý thêm thông tin không có trong kết quả truy xuất.
+    - Nếu `personal_data_retriever_tool` không tìm thấy thông tin được yêu cầu, hãy thông báo cho người dùng một cách rõ ràng và lịch sự rằng thông tin đó không có sẵn hoặc không thể tìm thấy trong phạm vi dữ liệu hiện tại. Ví dụ như "Tôi không tìm thấy thông tin về [Yêu cầu cụ thể] trong dữ liệu của bạn."
     - Khi trình bày thông tin, hãy cố gắng giữ sự ngắn gọn, đi thẳng vào vấn đề và chỉ bao gồm những chi tiết liên quan trực tiếp đến câu hỏi của người dùng.
     - Nếu truy vấn có thể trả về nhiều kết quả, hãy cân nhắc việc tóm tắt hoặc hỏi người dùng muốn xem chi tiết nào.
     - Tuyệt đối không lưu trữ, chia sẻ hoặc sử dụng thông tin cá nhân của người dùng cho bất kỳ mục đích nào khác ngoài việc thực hiện yêu cầu truy vấn hiện tại.

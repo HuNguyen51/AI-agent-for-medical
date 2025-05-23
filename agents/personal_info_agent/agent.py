@@ -52,13 +52,13 @@ class PersonalInfoAgent(BaseAgent):
                 yield {
                     'is_task_complete': False,
                     'require_user_input': False,
-                    'content': 'Looking up the exchange rates...',
+                    'content': 'Looking up data...',
                 }
             elif isinstance(message, ToolMessage):
                 yield {
                     'is_task_complete': False,
                     'require_user_input': False,
-                    'content': 'Processing the exchange rates..',
+                    'content': 'Processing data..',
                 }
 
         yield self.get_agent_response(config)

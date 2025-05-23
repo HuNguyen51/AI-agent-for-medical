@@ -1,101 +1,72 @@
 ## Demo Web App
 
-This demo application showcases agents talking to other agents over A2A.
+Ứng dụng demo này trình bày việc một Host Agent điều hướng tác vụ đến các Remote Agent để thực hiện tác vụ nào đó trên giao thức A2A.
 
 ![image](./a2a_demo_arch.png)
 
-- The frontend is a [mesop](https://github.com/mesop-dev/mesop) web application that renders conversations as content between the end user and the "Host Agent". This app can render text content, thought bubbles, web forms (requests for input from agents), and images. More content types coming soon
+- Frontend là [mesop](https://github.com/mesop-dev/mesop) web application tạo ra cuộc hội thoại giữa người dùng cuối và "Host Agent". Ứng dụng này có thể tạo ra nội dung text, thought bubbles, web forms (yêu cầu bổ sung dữ liệu từ agents), và hình ảnh. Các kiểu dữ nội dung khác sẽ sớm được cập nhật,
 
-- The [Host Agent](/samples/python/hosts/multiagent/host_agent.py) is a Google ADK agent which orchestrates user requests to Remote Agents.
+- **Host Agent** là Google ADK agent có khả năng điều hướng user requests đến các Remote Agents.
 
-- Each [Remote Agent](/samples/python/hosts/multiagent/remote_agent_connection.py) is an A2AClient running inside a Google ADK agent. Each remote agent will retrieve the A2AServer's [AgentCard](https://google.github.io/A2A/#documentation?id=agent-card) and then proxy all requests using A2A.
+- Mỗi **Remote Agent** là một A2AClient chạy trong Google ADK agent. Mỗi remote agent sẽ lấy A2AServer's [AgentCard](https://google.github.io/A2A/#documentation?id=agent-card) và uỷ quyền tất cả requests bằng A2A.
 
 ## Features
 
 <need quick gif>
 
-### Dynamically add agents
+### Thêm Agent một cách linh hoạt
 
 Clicking on the robot icon in the web app lets you add new agents. Enter the address of the remote agent's AgentCard and the app will fetch the card and add the remote agent to the local set of known agents.
+Nhấp vào biểu tượng robot trong ứng dụng web cho phép bạn thêm các Agent mới. Nhập địa chỉ AgentCard của remote agent và ứng dụng sẽ lấy card và thêm remote agent đó vào danh sách các agents cục bộ.
 
-### Speak with one or more agents
+### Giao tiếp với một hoặc nhiều Agents
 
-Click on the chat button to start or continue an existing conversation. This conversation will go to the Host Agent which will then delegate the request to one or more remote agents.
+Nhấn vào nút chat để bắt đầu hoặc tiếp tục một cuộc trò chuyện hiện có. Cuộc trò chuyện này sẽ được gửi đến Host Agent, sau đó Host Agent sẽ chuyển giao yêu cầu cho một hoặc nhiều remote agent.
 
-If the agent returns complex content - like an image or a web-form - the frontend will render this in the conversation view. The Remote Agent will take care of converting this content between A2A and the web apps native application representation.
+Nếu agent trả về nội dung phức tạp - như hình ảnh hoặc web-form - frontend sẽ hiển thị nội dung này trong giao diện trò chuyện. Remote Agent sẽ đảm nhiệm việc chuyển đổi nội dung này giữa A2A và ứng dụng của web apps.
 
-### Explore A2A Tasks
+### Khám phá A2A tasks
 
-Click on the history to see the messages sent between the web app and all of the agents (Host agent and Remote agents).
+Nhấn vào lịch sử để xem các tin nhắn được gửi giữa web app và tất cả các agent (Host agent và Remote agent).
 
-Click on the task list to see all the A2A task updates from the remote agents
+Nhấn vào danh sách tasks để xem tất cả các cập nhật A2A tasks từ các remote agent.
 
 ## Prerequisites
 
-- Python 3.12 or higher
+- Python 3.12 hoặc cao hơn
 - UV
-- Agent servers speaking A2A ([use these samples](/samples/python/agents/README.md))
-- Authentication credentials (API Key or Vertex AI)
+- [Agent servers](/samples/python/agents/README.md) giao tiếp A2A 
+- Authentication credentials (API Key hoặc Vertex AI)
 
 ## Running the Examples
 
-1. Navigate to the demo ui directory:
+1. Điều hướng đến thư mục giao diện demo:
    ```bash
    cd demo/ui
    ```
-2. Create an environment file with your API key or enter it directly in the UI when prompted:
-
-   **Option A: Google AI Studio API Key**
+2. Tạo file môi trường chứa API_KEY:
 
    ```bash
-   echo "GOOGLE_API_KEY=your_api_key_here" >> .env
+   echo "GOOGLE_API_KEY=your_api_key_here" > .env
    ```
-
-   Or enter it directly in the UI when prompted.
-
-   **Option B: Google Cloud Vertex AI**
-
-   ```bash
-   echo "GOOGLE_GENAI_USE_VERTEXAI=TRUE" >> .env
-   echo "GOOGLE_CLOUD_PROJECT=your_project_id" >> .env
-   echo "GOOGLE_CLOUD_LOCATION=your_location" >> .env
-   ```
-
-   Note: Ensure you've authenticated with gcloud using `gcloud auth login` first.
-
-   For detailed instructions on authentication setup, see the [ADK documentation](https://google.github.io/adk-docs/get-started/quickstart/#set-up-the-model).
 
 3. Run the front end example:
 
    ```bash
-   uv run main.py
+  python main.py
    ```
 
-   Note: The application runs on port 12000 by default
+   Note: ứng dụng chạy mặc định ở cổng 12000.
 
-4. Interact with the demo, and add some sample agents which speak A2A:
+4. Tương tác với demo UI, và thêm các Agents.
 
+   Vào thư mục `agents` để chọn agent muốn thêm, và chạy file `__main__.py` trong đó như [hướng dẫn chạy agents](/agents/README.md)
+
+   Quay lại demo UI, chọn _Remote Agents_ có hình biểu tượng robot, và thêm agent và nhập địa URL của remote agent. Màn hình sẽ hiển thị các thông tin trong Agent's Card.
+
+   Sau đó bạn có thể trò chuyện với các agent và nó có thể truy cập và remote agent để thực hiện các chức năng của remote agent.
+
+   Bạn có thể review các sự kiện diễn ra trong quá trình trò truyện để xem việc điều hướng của Host Agent, việc thực hiện tác vụ của các Remote Agent cũng như cách các Agent tương tác với nhau.
    You can ask the demo agent _"What remote agents do you have access to?"_
-   and there should not be any.
 
-   Next go start up **any** sample agent:
-
-   ```bash
-   cd ../../samples/python/agents/google_adk/
-   cp ../../../../demo/ui/.env ./
-   uv run .
-   ```
-
-   Back in the demo UI you can go to the _Remote Agents_ tab and add this agent's address:
-
-   ```
-   localhost:10002
-   ```
-
-   Then you can converse with the demo agent and it should now have access to the _Reimbursement Agent_.
-
-   You can ask it to _"reimburse lunch for 20 EUR but needs to be converted to USD ahead of time."_
-
-   Answer it's questions in a normal... If you need help converting currency, try adding the LangGraph sample agent too.
-
-   Review the events to see what happened.
+Có thể dụng `uv run .` thay cho `python file.py` trong quá trình sử dụng.
