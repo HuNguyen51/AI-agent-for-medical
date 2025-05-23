@@ -92,7 +92,7 @@ Có thể dụng `uv run .` thay cho `python <file>.py` trong quá trình sử d
 
 ## Demo conversation
 
-![image](./a2a_demo_conversation.jpeg)
+![image](./a2a_demo.jpeg)
 
 ## Learn More
 
