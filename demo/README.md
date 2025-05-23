@@ -53,20 +53,20 @@ Nhấn vào danh sách tasks để xem tất cả các cập nhật A2A tasks t�
 3. Chạy giao diện demo:
 
    ```bash
-  python ./main.py
+   python ./main.py
    ```
 
    Note: ứng dụng chạy mặc định ở cổng 12000.
 
 4. Tương tác với demo UI, và thêm các Agents.
 
-Vào thư mục `agents` để chọn agent muốn thêm, và chạy file `__main__.py` trong đó như [hướng dẫn chạy agents](/agents/README.md)
+   Vào thư mục `agents` để chọn agent muốn thêm, và chạy file `__main__.py` trong đó như [hướng dẫn chạy agents](/agents/README.md)
 
-Quay lại demo UI, chọn _Remote Agents_ có hình biểu tượng robot, và thêm agent và nhập địa URL của remote agent. Màn hình sẽ hiển thị các thông tin trong Agent's Card.
+   Quay lại demo UI, chọn _Remote Agents_ có hình biểu tượng robot, và thêm agent và nhập địa URL của remote agent. Màn hình sẽ hiển thị các thông tin trong Agent's Card.
 
-Sau đó bạn có thể trò chuyện với các agent và nó có thể truy cập và remote agent để thực hiện các chức năng của remote agent.
+   Sau đó bạn có thể trò chuyện với các agent và nó có thể truy cập và remote agent để thực hiện các chức năng của remote agent.
 
-Bạn có thể review các sự kiện diễn ra trong quá trình trò truyện để xem việc điều hướng của Host Agent, việc thực hiện tác vụ của các Remote Agent cũng như cách các Agent tương tác với nhau.
+   Bạn có thể review các sự kiện diễn ra trong quá trình trò truyện để xem việc điều hướng của Host Agent, việc thực hiện tác vụ của các Remote Agent cũng như cách các Agent tương tác với nhau.
 
 
 Có thể dụng `uv run .` thay cho `python file.py` trong quá trình sử dụng.

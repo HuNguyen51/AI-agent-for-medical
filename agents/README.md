@@ -65,7 +65,7 @@ sequenceDiagram
    python agents/<agent_to_run>/__main__.py
    ```
 
-  Url và port tuỳ vào configs/*-agent.yaml. Ví dụ: http://localhost:10000
+  Url và port tuỳ vào `configs/*-agent.yaml`. Ví dụ: http://localhost:10000
 
   Có nhiều Agent thì sẽ chạy nhiều file với các host và port khác nhau.
 

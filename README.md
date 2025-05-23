@@ -46,6 +46,11 @@ Các AI Agents thực hiện các chức năng riêng biệt sử dụng nhiều
 * [**Hosts**](/hosts/README.md)  
 Ứng dụng host sử dụng A2AClient. Bao gồm CLI hiển thị hoàn thành nhiệm vụ đơn giản với một agent, ứng dụng web mesop giao tiếp với nhiều agent, và orchestrator agent chuyển giao nhiệm vụ cho một trong nhiều remote A2A agent.
 
+Các thư mục phụ trợ như:
+
+- **db-server**: Dùng để tạo vector database từ dữ liệu người dùng cho mục đích tăng cường dữ liệu tuỳ chỉnh cho các phản hồi.
+- **llm-server**: Dùng để load local model cho phép client tương tác với server bằn OpenAI API.
+
 ## Prerequisites
 
 - Python 3.13 hoặc cao hơn
