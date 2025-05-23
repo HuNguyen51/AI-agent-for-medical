@@ -1,6 +1,6 @@
 **Agents Server**
 
-Trước đây là dự án AI-agent-for-medical, nhưng hiện tại đang cập nhật các công nghệ mới như A2A, MCP (đang phát triển), và đổi tên thành AI-agent-for-CEO, để dự án có thể sát với thực tế và tính ứng dụng cao cho mặt bằng chung.
+[Đang phát triển...]
 
 # Mục tiêu dự án là:
 1. Trợ lý Phân tích Dữ liệu và Cung cấp Thông tin Chi tiết:
@@ -37,8 +37,8 @@ Dự án này vẫn đang trong quá trình phát triển và có thể có mộ
 Hy vọng file README này sẽ giúp bạn hiểu rõ hơn về dự án và cách sử dụng nó.
 
 
----
 # Sample Code
+--- Đây là readme của Google A2A sample code.
 
 This code is used to demonstrate A2A capabilities as the spec progresses.
 

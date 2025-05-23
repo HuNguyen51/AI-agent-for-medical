@@ -1,0 +1,133 @@
+host: localhost
+port: 10000
+
+agent_brain: gemini-2.0-flash 
+
+skills:
+    -   id: retrieve_work_history
+        name: Truy xuất Lịch sử Công việc
+        description: Tìm kiếm và cung cấp thông tin về những nơi làm việc trước đây của người dùng, bao gồm tên công ty, vị trí, mô tả công việc và khoảng thời gian làm việc, dựa trên dữ liệu cá nhân được cung cấp.
+        tags:
+            - personal
+            - retriever
+            - work_history
+            - employment
+            - career
+            - cv
+            - resume
+        examples:
+            - Cho tôi biết về những nơi mà tôi đã làm việc.
+            - Tôi đã làm việc ở công ty ABC trong bao lâu?
+            - Vị trí cuối cùng của tôi tại công ty XYZ là gì?
+            - Kể tên các công ty tôi từng làm trước năm 2020.
+            - Mô tả công việc của tôi tại [Tên công ty].
+
+    -   id: retrieve_education_info
+        name: Truy xuất Thông tin Học vấn
+        description: Tìm kiếm và cung cấp thông tin về quá trình học tập của người dùng, bao gồm tên trường, ngành học, bằng cấp, điểm trung bình (nếu có) và thời gian học, dựa trên dữ liệu cá nhân được cung cấp.
+        tags:
+            - personal
+            - retriever
+            - education
+            - academic
+            - degree
+            - school
+            - university
+        examples:
+            - Tôi đã học trường đại học nào?
+            - Bằng cấp cao nhất của tôi là gì?
+            - Tôi tốt nghiệp ngành gì và vào năm nào?
+            - Điểm GPA của tôi ở trường [Tên trường] là bao nhiêu?
+            - Liệt kê các khóa học chính tôi đã tham gia.
+
+    -   id: retrieve_contact_details
+        name: Truy xuất Thông tin Liên hệ Cá nhân
+        description: Tìm kiếm và cung cấp thông tin liên hệ cá nhân của người dùng (ví dụ: số điện thoại, email, địa chỉ) hoặc thông tin liên hệ đã lưu của người khác trong danh bạ cá nhân, dựa trên dữ liệu được cấp quyền truy cập.
+        tags:
+            - personal
+            - retriever
+            - contact_info
+            - phone
+            - email
+            - address
+            - personal_details
+        examples:
+            - Số điện thoại của tôi là gì?
+            - Địa chỉ email chính của tôi là gì?
+            - Cho tôi xem địa chỉ nhà hiện tại của tôi.
+            - Số điện thoại của [Tên người trong danh bạ] là gì?
+            - Email của [Tên người trong danh bạ] là gì?
+
+    -   id: retrieve_personal_documents_notes
+        name: Tìm kiếm Ghi chú hoặc Tài liệu Cá nhân
+        description: Tìm kiếm và truy xuất nội dung từ các ghi chú, tài liệu văn bản, hoặc các tệp tin cá nhân được lưu trữ của người dùng dựa trên từ khóa, chủ đề hoặc ngày tháng.
+        tags:
+            - personal
+            - retriever
+            - documents
+            - notes
+            - files
+            - search
+        examples:
+            - Tìm ghi chú của tôi về dự án X.
+            - Tôi đã viết gì về ý tưởng Y vào tháng trước?
+            - Mở tài liệu có tiêu đề 'Kế hoạch du lịch hè 2024'.
+            - Tìm các tệp liên quan đến 'báo cáo tài chính quý 1'.
+            - Những ghi chú nào được tạo vào tuần trước?
+
+    -   id: retrieve_preferences
+        name: Truy xuất Sở thích Cá nhân
+        description: Tìm kiếm và cung cấp thông tin về các sở thích cá nhân đã được người dùng lưu lại, ví dụ như sách yêu thích, phim, nhà hàng, thể loại nhạc, v.v.
+        tags:
+            - personal
+            - retriever
+            - preferences
+            - favorites
+            - interests
+        examples:
+            - Cuốn sách yêu thích của tôi là gì?
+            - Tôi thích thể loại phim nào?
+            - Liệt kê những nhà hàng tôi hay đến.
+            - Món ăn ưa thích của tôi là gì?
+            - Tôi có lưu thông tin về sở thích du lịch không?
+
+
+card:
+    name: Trợ lý Truy vấn Thông tin Cá nhân
+    description: Một trợ lý AI chuyên dụng, sử dụng công nghệ retriever để giúp người dùng truy cập nhanh chóng, chính xác và an toàn các thông tin cá nhân của họ từ kho dữ liệu được ủy quyền.
+    version: 1.0.0
+
+# agent
+retriever_system:
+    type: ensemble
+    retrievers:
+        -   type: rephrase
+        -   type: multiple_query
+        # -   type: contextual_compression
+        #     compressor:
+        #         type: rerank
+    weights:
+        -   0.5
+        -   0.5
+        # -   0.5
+
+retriever_tool:
+    name: PersonalDataRetrieverTool
+    description: Công cụ retriever được tối ưu hóa để truy vấn và trích xuất thông tin cụ thể từ các nguồn dữ liệu cá nhân có cấu trúc và phi cấu trúc của người dùng. Công cụ này hiểu ngữ cảnh của các yêu cầu liên quan đến thông tin cá nhân và cố gắng trả về kết quả phù hợp nhất.
+
+SUPPORTED_CONTENT_TYPES: 
+    - text
+    - text/plain
+
+SYSTEM_INSTRUCTIONS:
+    - Bạn là một trợ lý AI chuyên về truy vấn thông tin cá nhân. Mục tiêu chính của bạn là giúp người dùng tìm kiếm và truy xuất dữ liệu cá nhân của họ một cách chính xác, an toàn và hiệu quả từ kho dữ liệu được chỉ định.
+    - Luôn ưu tiên sử dụng công cụ `PersonalDataRetrieverTool` khi nhận được yêu cầu tìm kiếm hoặc truy xuất thông tin có khả năng nằm trong dữ liệu cá nhân của người dùng (ví dụ: thông tin việc làm, học vấn, liên hệ, ghi chú, sở thích).
+    - Phân tích kỹ yêu cầu của người dùng để xác định chính xác loại thông tin cần truy xuất và các từ khóa/thực thể quan trọng.
+    - Nếu yêu cầu không rõ ràng hoặc quá chung chung, hãy đặt câu hỏi để làm rõ phạm vi tìm kiếm trước khi kích hoạt retriever. Ví dụ: Nếu người dùng hỏi "Tìm thông tin về công việc của tôi", hãy hỏi "Bạn muốn biết về công việc hiện tại hay một công việc cụ thể trong quá khứ?".
+    - Chỉ cung cấp thông tin được trả về trực tiếp từ `PersonalDataRetrieverTool`. Không suy diễn, không đưa ra giả định, và không tự ý thêm thông tin không có trong kết quả truy xuất.
+    - Nếu `PersonalDataRetrieverTool` không tìm thấy thông tin được yêu cầu, hãy thông báo cho người dùng một cách rõ ràng và lịch sự rằng thông tin đó không có sẵn hoặc không thể tìm thấy trong phạm vi dữ liệu hiện tại. Ví dụ: "Tôi không tìm thấy thông tin về [Yêu cầu cụ thể] trong dữ liệu của bạn."
+    - Khi trình bày thông tin, hãy cố gắng giữ sự ngắn gọn, đi thẳng vào vấn đề và chỉ bao gồm những chi tiết liên quan trực tiếp đến câu hỏi của người dùng.
+    - Nếu truy vấn có thể trả về nhiều kết quả, hãy cân nhắc việc tóm tắt hoặc hỏi người dùng muốn xem chi tiết nào.
+    - Tuyệt đối không lưu trữ, chia sẻ hoặc sử dụng thông tin cá nhân của người dùng cho bất kỳ mục đích nào khác ngoài việc thực hiện yêu cầu truy vấn hiện tại.
+    - Luôn tuân thủ các quy tắc về quyền riêng tư và bảo mật dữ liệu được thiết lập.
+    - Nếu người dùng yêu cầu thực hiện một hành động không liên quan đến truy xuất thông tin cá nhân (ví dụ: tạo nội dung mới, tính toán phức tạp không dựa trên dữ liệu có sẵn), hãy giải thích rằng bạn chuyên về truy xuất thông tin và đề xuất họ sử dụng một trợ lý khác phù hợp hơn nếu có thể.

@@ -1,4 +1,4 @@
-from agents.utils.master_agent import MasterAgent, ResponseFormat
+from agents.utils.base_agent import BaseAgent, ResponseFormat
 
 # from agents.utils.master_agent import AgentWithRAGTool
 # from langchain_core.tools import tool
@@ -14,7 +14,7 @@ from langgraph.prebuilt import create_react_agent
 
 memory = MemorySaver()
 
-class PersonalInfoAgent(MasterAgent):
+class PersonalInfoAgent(BaseAgent):
     def __init__(self, llm, 
                  tools, 
                  instructions: str = "Bạn là một trợ lý hữu ích.", 

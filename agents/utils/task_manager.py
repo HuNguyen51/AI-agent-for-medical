@@ -4,7 +4,7 @@ import traceback
 
 from collections.abc import AsyncIterable
 
-from agents.utils.master_agent import MasterAgent
+from agents.utils.base_agent import BaseAgent
 
 from common.server import utils
 from common.server.task_manager import InMemoryTaskManager
@@ -37,7 +37,7 @@ logger = logging.getLogger(__name__)
 class AgentTaskManager(InMemoryTaskManager):
     def __init__(
         self,
-        agent: MasterAgent,
+        agent: BaseAgent,
         notification_sender_auth: PushNotificationSenderAuth,
     ):
         super().__init__()

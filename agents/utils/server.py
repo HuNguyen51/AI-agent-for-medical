@@ -1,7 +1,7 @@
 import logging
 import os
 
-from agents.utils.master_agent import MasterAgent
+from agents.utils.base_agent import BaseAgent
 from agents.utils.task_manager import AgentTaskManager
 
 from common.server import A2AServer
@@ -22,7 +22,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 class Runner:
-    def __init__(self, agent: MasterAgent, configs):
+    def __init__(self, agent: BaseAgent, configs):
         self.agent = agent
         self.configs = configs
 

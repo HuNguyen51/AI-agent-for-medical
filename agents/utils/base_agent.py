@@ -16,8 +16,8 @@ class ResponseFormat(BaseModel):
     message: str
 
 
-# MASTER AGENT
-class MasterAgent:
+# BASE AGENT
+class BaseAgent:
     def __init__(self):
         pass
     def invoke(self, query, sessionId) -> str:
