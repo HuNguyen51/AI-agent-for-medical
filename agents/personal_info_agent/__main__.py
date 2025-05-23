@@ -5,19 +5,27 @@ logger = logging.getLogger(__name__)
 logging.getLogger("langchain.retrievers.multi_query").setLevel(logging.INFO)
 logging.getLogger("langchain.retrievers.re_phraser").setLevel(logging.INFO)
 
+from common.types import MissingAPIKeyError
+
 
 from agents.personal_info_agent.agent import PersonalInfoAgent
-from agents.utils.master_agent import AgentWithRAGTool
+from agents.utils.base_agent import AgentWithRAGTool
 
 from langchain_google_genai import ChatGoogleGenerativeAI
 # from langchain_openai import ChatOpenAI
+
+import os
+from dotenv import load_dotenv
+load_dotenv()
+if not os.getenv('GOOGLE_API_KEY'):
+    raise MissingAPIKeyError('GOOGLE_API_KEY environment variable not set.')
 
 # Read config
 import yaml
 with open("./configs/vectorstore.yaml") as f:
     configs: dict = yaml.safe_load(f)
 
-with open("./configs/medical-info-agent.yaml") as f:
+with open("./configs/personal-info-agent.yaml") as f:
     agent_configs: dict = yaml.safe_load(f)
 
 configs.update(agent_configs)

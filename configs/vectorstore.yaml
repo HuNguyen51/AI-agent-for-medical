@@ -8,5 +8,5 @@ embedding:
 
 chunk_size: 512
 chunk_overlap: 128
-data_source_path: ./data/medical
+data_source_path: ./data
 vectorstore_path: ./vectorstore/chroma_db

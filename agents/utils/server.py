@@ -1,5 +1,4 @@
 import logging
-import os
 
 from agents.utils.base_agent import BaseAgent
 from agents.utils.task_manager import AgentTaskManager
@@ -8,15 +7,9 @@ from common.server import A2AServer
 from common.types import (
     AgentCapabilities,
     AgentCard,
-    AgentSkill,
-    MissingAPIKeyError,
-)
+    AgentSkill
+    )
 from common.utils.push_notification_auth import PushNotificationSenderAuth
-from dotenv import load_dotenv
-
-
-load_dotenv()
-
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -29,11 +22,6 @@ class Runner:
     def run(self, host='localhost', port=10000):
         """Start the server."""
         try:
-            if not os.getenv('GOOGLE_API_KEY'):
-                raise MissingAPIKeyError(
-                    'GOOGLE_API_KEY environment variable not set.'
-                )
-
             capabilities = AgentCapabilities(streaming=True, pushNotifications=True)
             skills = []
             for skill in self.configs['skills']:
@@ -78,9 +66,6 @@ class Runner:
 
             logger.info(f'Starting server on {host}:{port}')
             server.start()
-        except MissingAPIKeyError as e:
-            logger.error(f'Error: {e}')
-            exit(1)
         except Exception as e:
             logger.error(f'An error occurred during server startup: {e}')
             exit(1)
