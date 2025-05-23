@@ -16,7 +16,7 @@ sequenceDiagram
     participant Retriever as LangChain Retriever
 
     Client->>Server: Gửi task truy vấn dữ liệu
-    Server->>Agent:  Chuyển tiếp task tới Agent cá nhân
+    Server->>Agent:  Chuyển tiếp task tới personal Agent
 
     alt Complete Information
         Agent->>Retriever: Gọi personal_data_retriever_tool
