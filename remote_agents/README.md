@@ -6,7 +6,7 @@ Các AI Agents được xây dựng bằng [LangGraph](https://langchain-ai.gith
 
 Tác nhân này sử dụng LangGraph với Google Gemini để cung cấp thông tin trao đổi thông qua ReAct agent pattern. Giao thức A2A cho phép tương tác chuẩn hóa với Agent, cho phép user gửi yêu cầu và nhận cập nhật theo thời gian thực.
 
-Ví dụ cơ bản về cách giao thức A2A chạy với PersonalInfoAgent:
+Ví dụ cơ bản về cách giao thức A2A chạy với DataAgent:
 
 ```mermaid
 sequenceDiagram
@@ -19,7 +19,7 @@ sequenceDiagram
     Server->>Agent:  Chuyển tiếp task tới Personal Agent
 
     alt Complete Information
-        Agent->>Retriever: Gọi personal_data_retriever_tool
+        Agent->>Retriever: Gọi data_retriever_tool
         Retriever->>Agent: Trả về thông tin truy vấn được
         Agent->>Server: Xử lý dữ liệu rồi trả về kết quả
         Server->>Client: Phản hồi dựa trên thông tin đã truy vấn
@@ -28,7 +28,7 @@ sequenceDiagram
         Server->>Client: Đặt trạng thái "input-required"
         Client->>Server: Gửi thông tin bổ sung
         Server->>Agent: Chuyển tiếp thông tin
-        Agent->>Retriever: Gọi personal_data_retriever_tool
+        Agent->>Retriever: Gọi data_retriever_tool
         Retriever->>Agent: Trả về thông tin truy vấn được
         Agent->>Server: Xử lý dữ liệu rồi trả về kết quả
         Server->>Client: Phản hồi dựa trên thông tin đã truy vấn
@@ -42,40 +42,6 @@ sequenceDiagram
 - **Push Notifications**: Hỗ trợ thông báo dựa trên
 - **Conversational Memory**: Duy trì ngữ cảnh trong các tương tác giữa các Agents
 - **Data Retriever Tool**: Sử dụng Retriever để truy xuất các thông tin liên quan có tồn tại trong documents để phản hồi cho user
-
-## Prerequisites
-
-- Python 3.13 hoặc cao hơn
-- [UV](https://docs.astral.sh/uv/)
-- API Key cho LLM
-
-## Setup & Running
-
-1. Thư mục hiện hành sẽ là thư mục gốc.
-
-2. Tạo file môi trường chứa API_KEY:
-
-   ```bash
-   echo "GOOGLE_API_KEY=your_api_key_here" > .env
-   ```
-
-3. Chạy Agent:
-
-   ```bash
-   python agents/<agent_to_run>/__main__.py
-   ```
-
-  Url và port tuỳ vào `configs/*-agent.yaml`. Ví dụ: http://localhost:10000
-
-  Có nhiều Agent thì sẽ chạy nhiều file với các host và port khác nhau.
-
-4. Chạy [UI](/demo/README.md) để tương tác với các Agents :
-
-   ```bash
-   python demo/ui/main.py
-   ```
-
-Có thể dụng `uv run .` thay cho `python <file>.py` trong quá trình sử dụng.
 
 ## Triển khai
 
@@ -92,7 +58,7 @@ Có thể dụng `uv run .` thay cho `python <file>.py` trong quá trình sử d
 
 ## Demo conversation
 
-![image](./a2a_demo.jpeg)
+![image](./utils/a2a_demo_conversation.jpeg)
 
 ## Learn More
 

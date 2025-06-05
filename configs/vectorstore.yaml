@@ -8,5 +8,5 @@ embedding:
 
 chunk_size: 512
 chunk_overlap: 128
-data_source_path: ./data/personal
-vectorstore_path: ./vectorstore/personal
+data_source_path: ./data/active
+vectorstore_path: ./vectorstore/data

@@ -1,8 +1,4 @@
-from agents.utils.base_agent import BaseAgent, ResponseFormat
-
-# from agents.utils.master_agent import AgentWithRAGTool
-# from langchain_core.tools import tool
-# import httpx
+from remote_agents.base_agent import BaseAgent, ResponseFormat
 
 from collections.abc import AsyncIterable
 from typing import Any
@@ -14,7 +10,7 @@ from langgraph.prebuilt import create_react_agent
 
 memory = MemorySaver()
 
-class PersonalInfoAgent(BaseAgent):
+class DataAgent(BaseAgent):
     def __init__(self, llm, 
                  tools, 
                  instructions: str = "Bạn là một trợ lý hữu ích.", 

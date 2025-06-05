@@ -1,7 +1,7 @@
 import logging
 
-from agents.utils.base_agent import BaseAgent
-from agents.utils.task_manager import AgentTaskManager
+from remote_agents.base_agent import BaseAgent
+from remote_agents.utils.task_manager import AgentTaskManager
 
 from common.server import A2AServer
 from common.types import (

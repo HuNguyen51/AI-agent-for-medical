@@ -4,7 +4,7 @@ import traceback
 
 from collections.abc import AsyncIterable
 
-from agents.utils.base_agent import BaseAgent
+from remote_agents.base_agent import BaseAgent
 
 from common.server import utils
 from common.server.task_manager import InMemoryTaskManager

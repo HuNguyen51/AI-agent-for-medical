@@ -5,7 +5,7 @@ from pydantic import BaseModel
 
 from langchain_chroma import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
-from agents.utils.query_retrievers import RetrieverSystem
+from remote_agents.utils.query_retrievers import RetrieverSystem
 from langchain.tools.retriever import create_retriever_tool
 
 # RESPONSE FORMAT

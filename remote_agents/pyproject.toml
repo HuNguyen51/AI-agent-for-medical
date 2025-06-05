@@ -1,7 +1,7 @@
 [project]
-name = "Medical-Info-Agent"
+name = "AI-Agents"
 version = "0.1.1"
-description = "Medical Agent using LangGraph with A2A Protocol"
+description = "AI Agent for CEO using A2A Protocol"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
@@ -16,7 +16,9 @@ dependencies = [
     "langchain-community",
     "sse-starlette",
     "jwt",
-    "jwcrypto"
+    "jwcrypto",
+    "mcp[cli]",
+    "openai-agents"
 ]
 
 [tool.hatch.build.targets.wheel]

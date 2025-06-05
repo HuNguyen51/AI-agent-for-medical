@@ -21,7 +21,7 @@ packages = ["common", "hosts"]
 
 [tool.uv.workspace]
 members = [
-    "agents/MedicalInfoAgent",
+    "agents",
 ]
 
 [build-system]

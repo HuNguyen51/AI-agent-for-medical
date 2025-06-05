@@ -7,13 +7,13 @@ logging.getLogger("langchain.retrievers.re_phraser").setLevel(logging.INFO)
 
 from common.types import MissingAPIKeyError
 
-
-from agents.personal_info_agent.agent import PersonalInfoAgent
-from agents.utils.base_agent import AgentWithRAGTool
+from remote_agents.agent_zoo.data_agent import DataAgent
+from remote_agents.base_agent import AgentWithRAGTool
 
 from langchain_google_genai import ChatGoogleGenerativeAI
 # from langchain_openai import ChatOpenAI
 
+# load API key
 import os
 from dotenv import load_dotenv
 load_dotenv()
@@ -25,7 +25,7 @@ import yaml
 with open("./configs/vectorstore.yaml") as f:
     configs: dict = yaml.safe_load(f)
 
-with open("./configs/personal-info-agent.yaml") as f:
+with open("./configs/data.yaml") as f:
     agent_configs: dict = yaml.safe_load(f)
 
 configs.update(agent_configs)
@@ -41,10 +41,11 @@ instruction = " ".join(agent_configs['SYSTEM_INSTRUCTIONS']) if type(agent_confi
 content_type = agent_configs['SUPPORTED_CONTENT_TYPES']
 
 # Init Agent
-agent = PersonalInfoAgent(llm, tools, instruction, content_type)
+agent = DataAgent(llm, tools, instruction, content_type)
 host = agent_configs['host']
 port = agent_configs['port']
 
 if __name__ == '__main__':
-    from agents.utils.server import Runner
+    # command: python -m agents.personal_info_agent.__main__
+    from remote_agents.utils.server import Runner
     Runner(agent, agent_configs).run(host, port)
