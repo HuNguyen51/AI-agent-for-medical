@@ -11,16 +11,17 @@ from langgraph.prebuilt import create_react_agent
 memory = MemorySaver()
 
 class DataAgent(BaseAgent):
-    def __init__(self, llm, 
-                 tools, 
-                 instructions: str = "Bạn là một trợ lý hữu ích.", 
-                 content_type=['text', 'text/plain']):
+    def __init__(self, 
+                 name,
+                 model, 
+                 tools: list=None, 
+                 mcp_servers: list=None,
+                 instructions: str="Bạn là một trợ lý hữu ích.", 
+                 content_type: list=['text', 'text/plain']):
+        if mcp_servers:
+            raise Exception("DataAgent does not support MCP servers")
         
-        self.model = llm
-        self.tools = tools
-
-        self.SYSTEM_INSTRUCTION = instructions
-        self.SUPPORTED_CONTENT_TYPES = content_type
+        super().__init__(name, model, tools, mcp_servers, instructions, content_type)
 
         self.graph = create_react_agent(
             model=self.model,

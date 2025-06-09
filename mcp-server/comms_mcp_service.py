@@ -35,9 +35,11 @@ mcp = FastMCP(
 # COMMUNICATION SERVICE FUNCTIONS
 # =============================================================================
 
+llm_client = None
+
 # Viết email
 @mcp.tool()
-def draft_communication(comm_type: str, audience: str, tone: str, key_points: list, llm_client=None) -> dict:
+def draft_communication(comm_type: str, audience: str, tone: str, key_points: list) -> dict:
     """
     Soạn thảo nội dung giao tiếp bằng LLM dựa trên các điểm chính.
     
@@ -104,19 +106,30 @@ Hãy tạo ra một văn bản hoàn chỉnh, chuyên nghiệp và hiệu quả.
     if llm_client:
         try:
             response = llm_client.invoke(prompt)
-            return {"raw_response": response, "note": "LLM response cho soạn thảo nội dung."}
+            return {
+                "status": "success",
+                "code": 1,
+                "note": {"type": "text"},
+                "response": response, 
+            }
         except Exception as e:
-            return {"error": f"Lỗi khi gọi LLM: {str(e)}", "prompt": prompt}
+            return {
+                "status": "failed",
+                "code": 11,
+                "note": f"Lỗi khi gọi LLM: {str(e)}", 
+                "prompt": prompt
+            }
     else:
         return {
-            "thông_báo": "Cần tích hợp LLM client để tạo nội dung chất lượng cao",
-            "prompt_cho_llm": prompt,
-            "hướng_dẫn": f"Sử dụng prompt trên với LLM khác để có được nội dung {comm_type} chuyên nghiệp"
+            "status": "failed",
+            "code": 12,
+            "note": "Cần tích hợp LLM client để tạo nội dung chất lượng cao. Sử dụng prompt này với LLM khác để có được nội dung {comm_type} chuyên nghiệp",
+            "prompt": prompt,
         }
 
 # sửa chính tả 
 @mcp.tool()
-def proofread_and_edit(text: str, llm_client=None) -> dict:
+def proofread_and_edit(text: str) -> dict:
     """
     Kiểm tra lỗi chính tả, ngữ pháp và đề xuất cải thiện văn phong bằng LLM.
     
@@ -190,21 +203,38 @@ Hãy phân tích KỸ LƯỠNG và đưa ra phản hồi CHI TIẾT, CHÍNH XÁC
         try:
             response = llm_client.invoke(prompt)
             try:
-                return json.loads(response) if isinstance(response, str) else response
+                response = json.loads(response) if isinstance(response, str) else response
+                return {
+                    "status": "success",
+                    "code": 0,
+                    "note": {"type": "json"},
+                    "response": response
+                }
             except:
-                return {"raw_response": response, "note": "LLM response không phải JSON format"}
+                return {
+                    "status": "success",
+                    "code": 1,
+                    "note": {"type": "text"},
+                    "response": response, 
+                }
         except Exception as e:
-            return f"LỖI KHI GỌI LLM: {str(e)}\n\n[PROMPT DỰ PHÒNG]:\n{prompt}"
+            return {
+                "status": "failed",
+                "code": 11,
+                "note": f"Lỗi khi gọi LLM: {str(e)}", 
+                "prompt": prompt
+            }
     else:
         return {
-            "thông_báo": "Cần tích hợp LLM client để có phân tích chính xác",
-            "prompt_cho_llm": prompt,
-            "phân_tích_cơ_bản": {
-                "số_từ": {len(text.split())},
-                "số_câu": {len(re.split(r'[.!?]+', text.strip()))},
-                "các_lỗi_có_thể": {_quick_basic_check(text)}
+            "status": "failed",
+            "code": 12,
+            "note": "Cần tích hợp LLM client để có phân tích chính xác. Sử dụng prompt trên với LLM khác để có phân tích chi tiết và chuyên nghiệp.",
+            "prompt": prompt,
+            "more_info": {
+                "số từ": {len(text.split())},
+                "số câu": {len(re.split(r'[.!?]+', text.strip()))},
+                "các lỗi có thể": {_quick_basic_check(text)}
             },
-            "hướng_dẫn": "Sử dụng prompt trên với LLM khác để có phân tích chi tiết và chuyên nghiệp."
         }
 
 def _quick_basic_check(text: str) -> list:
@@ -220,7 +250,7 @@ def _quick_basic_check(text: str) -> list:
 
 # phân tích cảm xúc
 @mcp.tool()
-def analyze_sentiment(text: str, llm_client=None) -> dict:
+def analyze_sentiment(text: str) -> dict:
     """
     Phân tích sắc thái cảm xúc chi tiết bằng LLM.
     
@@ -320,21 +350,38 @@ Hãy phân tích CHÍNH XÁC, KHÁCH QUAN và CHI TIẾT dựa trên nội dung 
         try:
             response = llm_client.invoke(prompt)
             try:
-                return json.loads(response) if isinstance(response, str) else response
+                response = json.loads(response) if isinstance(response, str) else response
+                return {
+                    "status": "success",
+                    "code": 0,
+                    "note": {"type": "json"},
+                    "response": response
+                }
             except:
-                return {"raw_response": response, "note": "LLM response không phải JSON format"}
+                return {
+                    "status": "success",
+                    "code": 1,
+                    "note": {"type": "text"},
+                    "response": response, 
+                }
         except Exception as e:
-            return {"error": f"Lỗi khi gọi LLM: {str(e)}", "prompt": prompt}
+            return {
+                "status": "failed",
+                "note": f"Lỗi khi gọi LLM: {str(e)}", 
+                "code": 11,
+                "prompt": prompt
+            }
     else:
         return {
-            "thông_báo": "Cần tích hợp LLM client để phân tích cảm xúc chính xác",
-            "prompt_cho_llm": prompt,
-            "hướng_dẫn": "Sử dụng prompt trên với LLM để có phân tích cảm xúc chi tiết và chính xác"
+            "status": "failed",
+            "code": 12,
+            "note": "Cần tích hợp LLM client để phân tích cảm xúc chính xác. Sử dụng prompt trên với LLM để có phân tích cảm xúc chi tiết và chính xác",
+            "prompt": prompt,
         }
 
 # Dịch văn bản
 @mcp.tool()
-def translate_text(text: str, target_language: str, source_language: str = 'auto', llm_client=None) -> dict:
+def translate_text(text: str, target_language: str, source_language: str = 'auto') -> dict:
     """
     Dịch văn bản sang ngôn ngữ khác bằng LLM.
     
@@ -422,26 +469,43 @@ Hãy dịch CHÍNH XÁC, TỰ NHIÊN và GIỮ NGUYÊN Ý NGHĨA.
         try:
             response = llm_client.invoke(prompt)
             try:
-                return json.loads(response) if isinstance(response, str) else response
+                response = json.loads(response) if isinstance(response, str) else response
+                return {
+                    "status": "success",
+                    "code": 0,
+                    "note": {"type": "json"},
+                    "response": response
+                }
             except:
-                return {"raw_response": response, "note": "LLM response không phải JSON format"}
+                return {
+                    "status": "success",
+                    "code": 1,
+                    "note": {"type": "text"},
+                    "response": response, 
+                }
         except Exception as e:
-            return {"error": f"Lỗi khi gọi LLM: {str(e)}", "prompt": prompt}
+            return {
+                "status": "failed",
+                "note": f"Lỗi khi gọi LLM: {str(e)}", 
+                "code": 11,
+                "prompt": prompt
+            }
     else:
         return {
-            "thông_báo": "Cần tích hợp LLM client để dịch thuật chính xác",
-            "prompt_cho_llm": prompt,
-            "thông_tin_tạm_thời": {
-                "văn_bản_nguồn": f"{text[:100]}{"..." if len(text) > 100 else ""}",
-                "ngôn_ngữ_đích": f"{target_lang_name}",
-                "độ_dài": f"{len(text)} ký tự"
+            "status": "failed",
+            "code": 12,
+            "note": "Cần tích hợp LLM client để dịch thuật chính xác. Sử dụng prompt trên với LLM khác để có bản dịch chất lượng cao.",
+            "prompt": prompt,
+            "more_info": {
+                "văn bản nguồn": f"{text[:100]}{"..." if len(text) > 100 else ""}",
+                "ngôn ngữ đích": f"{target_lang_name}",
+                "độ dài": f"{len(text)} ký tự"
             },
-            "hướng_dẫn": "Sử dụng prompt trên với LLM khác để có bản dịch chất lượng cao."
         }
     
 # Tạo ý chính
 @mcp.tool()
-def generate_talking_points(topic: str, context: str, llm_client=None) -> dict:
+def generate_talking_points(topic: str, context: str) -> dict:
     """
     Tạo các ý chính cho cuộc thảo luận/bài phát biểu bằng LLM.
     
@@ -572,20 +636,37 @@ Hãy tạo ra talking points CHẤT LƯỢNG CAO, THỰC TẾ và HIỆU QUẢ p
         try:
             response = llm_client.invoke(prompt)
             try:
-                return json.loads(response) if isinstance(response, str) else response
+                response = json.loads(response) if isinstance(response, str) else response
+                return {
+                    "status": "success",
+                    "code": 0,
+                    "note": {"type": "json"},
+                    "response": response
+                }
             except:
-                return {"raw_response": response, "note": "LLM response không phải JSON format"}
+                return {
+                    "status": "success",
+                    "code": 1,
+                    "note": {"type": "text"},
+                    "response": response, 
+                }
         except Exception as e:
-            return {"error": f"Lỗi khi gọi LLM: {str(e)}", "prompt": prompt}
+            return {
+                "status": "failed",
+                "note": f"Lỗi khi gọi LLM: {str(e)}", 
+                "code": 11,
+                "prompt": prompt
+            }
     else:
         return {
-            "thông_báo": "Cần tích hợp LLM client để có dàn ý tốt hơn.",
-            "prompt_cho_llm": prompt,
-            "thông_tin_chung": {
-                "chủ_đề": f"{topic}",
-                "bối_cảnh": f"{context} ({context_info})",
+            "status": "failed",
+            "code": 12,
+            "note": "Cần tích hợp LLM client để có dàn ý tốt hơn. Sử dụng prompt trên với LLM khác để có bản dịch chất lượng cao.",
+            "promt": prompt,
+            "more_info": {
+                "chủ đề": f"{topic}",
+                "bối cảnh": f"{context} ({context_info})",
             },
-            "hướng_dẫn": "Sử dụng prompt trên với LLM khác để có bản dịch chất lượng cao."
         }
 
         

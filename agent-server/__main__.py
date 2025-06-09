@@ -31,17 +31,20 @@ with open("./configs/data.yaml") as f:
 configs.update(agent_configs)
 
 # Initialize
-llm = ChatGoogleGenerativeAI(model=agent_configs['agent_brain'])
+model = ChatGoogleGenerativeAI(model=agent_configs['agent_brain'])
 
-retriever_tool = AgentWithRAGTool(llm, configs).get_retriever_tool()
+retriever_tool = AgentWithRAGTool(model, configs).get_retriever_tool()
 tools = [retriever_tool]
 
-instruction = " ".join(agent_configs['SYSTEM_INSTRUCTIONS']) if type(agent_configs['SYSTEM_INSTRUCTIONS']) == list else agent_configs['SYSTEM_INSTRUCTIONS']
+instructions = " ".join(agent_configs['SYSTEM_INSTRUCTIONS']) if type(agent_configs['SYSTEM_INSTRUCTIONS']) == list else agent_configs['SYSTEM_INSTRUCTIONS']
 
 content_type = agent_configs['SUPPORTED_CONTENT_TYPES']
 
 # Init Agent
-agent = DataAgent(llm, tools, instruction, content_type)
+agent = DataAgent('DataAgent', model, 
+                  tools=tools, 
+                  instructions=instructions, 
+                  content_type=content_type)
 host = agent_configs['host']
 port = agent_configs['port']
 

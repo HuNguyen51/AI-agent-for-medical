@@ -18,8 +18,24 @@ class ResponseFormat(BaseModel):
 
 # BASE AGENT
 class BaseAgent:
-    def __init__(self):
-        pass
+    def __init__(self, 
+                 name, 
+                 model, 
+                 tools: list = None, 
+                 mcp_servers: list = None, 
+                 instructions: str = None, 
+                 content_type: list = None):
+        
+        self.name = name
+        self.model = model
+        self.tools = tools
+        self.mcp_servers = mcp_servers
+
+        if instructions:
+            self.SYSTEM_INSTRUCTION = instructions
+        if content_type:
+            self.SUPPORTED_CONTENT_TYPES = content_type
+
     def invoke(self, query, sessionId) -> str:
         raise NotImplementedError ("This object is not fully implemented")
 
