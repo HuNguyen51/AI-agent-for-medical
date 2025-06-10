@@ -18,7 +18,8 @@ dependencies = [
     "jwt",
     "jwcrypto",
     "mcp[cli]",
-    "openai-agents"
+    "openai-agents",
+    "langchain-mcp-adapters"
 ]
 
 [tool.hatch.build.targets.wheel]

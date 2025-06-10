@@ -45,7 +45,10 @@ class CommsAgent(BaseAgent):
             model_settings=ModelSettings(tool_choice="auto"),
         )
 
-    
+    # IMPORTANT
+    # https://langchain-ai.github.io/langgraph/agents/mcp/
+    # giống với đã sửa bên data_agent
+
     async def invoke(self, query, sessionId):
         input = [{"role": "user", "content": query}]
         result = await Runner.run(starting_agent=self.agent, input=input, max_turns=5)#, tracing_disbale = True

@@ -3,6 +3,7 @@ port: 10000
 
 agent_vectorstore: ./vectorstore/data
 agent_brain: gemini-2.0-flash 
+agent_name: DataAgent
 
 skills:
     -   id: retrieve_work_history
