@@ -1,47 +1,17 @@
 import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-# retriever logging
-logging.getLogger("langchain.retrievers.multi_query").setLevel(logging.INFO)
-logging.getLogger("langchain.retrievers.re_phraser").setLevel(logging.INFO)
-
-from common.types import MissingAPIKeyError
 
 from remote_agents.agent_zoo.data_agent import DataAgent
-from remote_agents.base_agent import AgentWithRAGTool
-
-from langchain_google_genai import ChatGoogleGenerativeAI
-# from langchain_openai import ChatOpenAI
-
-# load API key
-import os
-from dotenv import load_dotenv
-load_dotenv()
-if not os.getenv('GOOGLE_API_KEY'):
-    raise MissingAPIKeyError('GOOGLE_API_KEY environment variable not set.')
 
 # Read config
 import yaml
-with open("./configs/vectorstore.yaml") as f:
+with open("./configs/base.yaml") as f:
     configs: dict = yaml.safe_load(f)
 
-with open("./configs/data.yaml") as f:
-    agent_configs: dict = yaml.safe_load(f)
-
-configs.update(agent_configs)
-
-# Initialize
-## LLM Model
-model = ChatGoogleGenerativeAI(model=agent_configs['agent_brain'])
-
-## Tools
-retriever_tool = AgentWithRAGTool(model, configs).get_retriever_tool()
-tools = [retriever_tool]
-
 # Agent
-agent = DataAgent(model, tools=tools)
+agent = DataAgent(configs['data_agent'])
 
 if __name__ == '__main__':
-    # command: python -m agents.personal_info_agent.__main__
     from remote_agents.utils.server import Runner
-    Runner(agent, agent_configs).run(agent.host, agent.port)
+    Runner(agent).run()

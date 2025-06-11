@@ -54,12 +54,11 @@ class RetrieverFactory:
         self.llm = llm
         self.embeddings = embeddings
         self._prompt_templates = {
-            "rephrase": """Bạn là trợ lý hữu ích trong lĩnh vực y tế, được giao nhiệm vụ lấy truy vấn ngôn ngữ tự nhiên từ người dùng và chuyển đổi thành truy vấn cho vectorstore. 
+            "rephrase": """Bạn là trợ lý hữu ích, được giao nhiệm vụ lấy truy vấn ngôn ngữ tự nhiên từ người dùng và chuyển đổi thành truy vấn cho vectorstore. 
 Trong quá trình này, hãy loại bỏ tất cả thông tin không liên quan đến nhiệm vụ truy xuất và trả về một câu hỏi mới, đơn giản để truy xuất vectorstore. 
 Hãy trả lời bằng giọng văn trang nhã lịch sự, nhớ là phải trả lời ngắn gọn xúc tích nội dung chính, không dài dòng.
 Đây là câu hỏi: {question}.""",
-            "multiple_query": """Bạn là một trợ lý hữu ích trong lĩnh vực y tế.
-Nhiệm vụ của bạn là tạo ra năm phiên bản khác nhau của câu hỏi người dùng đã cho để lấy các tài liệu có liên quan từ cơ sở dữ liệu vector. 
+            "multiple_query": """Bạn là một trợ lý hữu ích. Nhiệm vụ của bạn là tạo ra năm phiên bản khác nhau của câu hỏi người dùng đã cho để lấy các tài liệu có liên quan từ cơ sở dữ liệu vector. 
 Bằng cách tạo ra nhiều góc nhìn về câu hỏi của người dùng, mục tiêu của bạn là giúp người dùng vượt qua một số hạn chế của tìm kiếm tương đồng dựa trên khoảng cách. 
 Cung cấp các câu hỏi thay thế này được phân tách bằng dòng mới.
 Đây là câu hỏi: {question}."""

@@ -15,16 +15,15 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 class Runner:
-    def __init__(self, agent: BaseAgent, configs):
+    def __init__(self, agent: BaseAgent):
         self.agent = agent
-        self.configs = configs
 
-    def run(self, host='localhost', port=10000):
+    def run(self):
         """Start the server."""
         try:
             capabilities = AgentCapabilities(streaming=True, pushNotifications=True)
             skills = []
-            for skill in self.configs['skills']:
+            for skill in self.agent.skills:
                 skills.append(
                     AgentSkill(
                         id=skill['id'],
@@ -36,10 +35,10 @@ class Runner:
                 )
 
             agent_card = AgentCard(
-                name=self.configs['card']['name'],
-                description=self.configs['card']['description'],
-                url=f'http://{host}:{port}/',
-                version=self.configs['card']['version'],
+                name=self.agent.card['name'],
+                description=self.agent.card['description'],
+                url=f'http://{self.agent.host}:{self.agent.port}/',
+                version=self.agent.card['version'],
                 defaultInputModes=self.agent.SUPPORTED_CONTENT_TYPES,
                 defaultOutputModes=self.agent.SUPPORTED_CONTENT_TYPES,
                 capabilities=capabilities,
@@ -54,8 +53,8 @@ class Runner:
                     agent=self.agent,
                     notification_sender_auth=notification_sender_auth,
                 ),
-                host=host,
-                port=port,
+                host=self.agent.host,
+                port=self.agent.port,
             )
 
             server.app.add_route(
@@ -64,15 +63,8 @@ class Runner:
                 methods=['GET'],
             )
 
-            logger.info(f'Starting server on {host}:{port}')
+            logger.info(f'Starting server on {self.agent.host}:{self.agent.port}')
             server.start()
         except Exception as e:
             logger.error(f'An error occurred during server startup: {e}')
             exit(1)
-
-
-if __name__ == '__main__':
-    import yaml
-    with open("./configs/medical-info-agent.yaml") as f:
-        configs=yaml.safe_load(f)
-    print(configs)

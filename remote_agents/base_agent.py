@@ -17,13 +17,20 @@ memory = MemorySaver()
 # BASE AGENT
 class BaseAgent:
     def __init__(self, 
-                 name, 
+                 card,
+                 skills,
+                 host,
+                 port,
                  model, 
                  tools: list = None, 
                  instructions: str = None, 
                  content_type: list = None):
-        
-        self.name = name
+                
+        self.card = card
+        self.skills = skills
+        self.host = host
+        self.port = port
+    
         self.model = model
         self.tools = tools
 
@@ -45,13 +52,16 @@ class BaseAgent:
 # LANGGRAPH AGENT
 class LangGraphAgent(BaseAgent):
     def __init__(self, 
-                 name,
+                 card,
+                 skills,
+                 host,
+                 port,
                  model, 
                  tools: list=[], 
                  instructions: str="Bạn là một trợ lý hữu ích.", 
                  content_type: list=['text', 'text/plain']):
         
-        super().__init__(name, model, tools, instructions, content_type)
+        super().__init__(card, skills, host, port, model, tools, instructions, content_type)
 
         self.graph = create_react_agent(
             model=self.model,
@@ -127,20 +137,21 @@ class ResponseFormat(BaseModel):
 
 # RAG
 class AgentWithRAGTool:
-    def __init__(self, llm, configs):
+    def __init__(self, llm, vector_cfs, agent_cfs):
         self.__llm = llm
-        self.__configs = configs
+        self.__vector_cfs = vector_cfs # tạo embedding
+        self.__agent_cfs = agent_cfs
         self.__initialize()
     def __initialize(self):
         # Tạo embedding
         embedding_function = HuggingFaceEmbeddings(
-                model_name=self.__configs['embedding']['model_name'],
-                model_kwargs=self.__configs['embedding']['model_kwargs'],
-                encode_kwargs=self.__configs['embedding']['encode_kwargs']
+                model_name=self.__vector_cfs['embedding']['model_name'],
+                model_kwargs=self.__vector_cfs['embedding']['model_kwargs'],
+                encode_kwargs=self.__vector_cfs['embedding']['encode_kwargs']
             )
         
         # Tạo vectorstore
-        vectordb = Chroma(persist_directory=self.__configs['agent_vectorstore'], embedding_function=embedding_function)
+        vectordb = Chroma(persist_directory=self.__agent_cfs['vectorstore'], embedding_function=embedding_function)
         
         # Tạo retriever
         base_retriever = vectordb.as_retriever()
@@ -148,13 +159,13 @@ class AgentWithRAGTool:
         
         retriever = retriever_system.create_retriever(
             base_retriever,
-            self.__configs['retriever_system']
+            self.__agent_cfs['retriever_system']
         )
 
         self.__retriever_tool = create_retriever_tool(
             retriever=retriever,
-            name=self.__configs['retriever_tool']['name'], # do not use vietnamese name
-            description=self.__configs['retriever_tool']['description'],
+            name=self.__agent_cfs['retriever_tool']['name'], # do not use vietnamese name
+            description=self.__agent_cfs['retriever_tool']['description'],
         )
     
     def get_llm(self):
