@@ -1,108 +1,67 @@
-import asyncio
-import os
-os.environ["OPENAI_AGENTS_DISABLE_TRACING"] = "1"
+from langchain_mcp_adapters.client import MultiServerMCPClient
 
-from openai import AsyncOpenAI
-from agents import set_default_openai_client
-from agents import set_default_openai_api
+from remote_agents.base_agent import LangGraphAgent
 
+# load API key
+import yaml
 from dotenv import load_dotenv
 load_dotenv()
 
-api_key=os.getenv('GOOGLE_API_KEY')
-base_url="https://generativelanguage.googleapis.com/v1beta/openai/"
+# retriever logging
+import logging
+logging.basicConfig(level=logging.INFO)
+logging.getLogger(__name__)
+logging.getLogger("langchain.retrievers.multi_query").setLevel(logging.INFO)
+logging.getLogger("langchain.retrievers.re_phraser").setLevel(logging.INFO)
 
-custom_client = AsyncOpenAI(base_url=base_url, api_key=api_key)
-set_default_openai_client(custom_client)
-set_default_openai_api("chat_completions")
-
-
-from typing import Any
-
-from agents import Agent, Runner#, gen_trace_id, trace
-from agents.mcp import MCPServer, MCPServerSse
-from agents.model_settings import ModelSettings
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_openai import ChatOpenAI
 
 
-from remote_agents.base_agent import BaseAgent, ResponseFormat
+# Read config
+def read_config():
+    with open("./configs/comms.yaml") as f:
+        agent_configs: dict = yaml.safe_load(f)
+    return agent_configs
 
-class CommsAgent(BaseAgent):
-    def __init__(self, 
-                 name,
-                 model, 
-                 tools: list=None, 
-                 mcp_servers: list=None,
-                 instructions: str="Hãy dùng các tool để trả lời câu hỏi.", 
-                 content_type: list=['text', 'text/plain']):
-        super().__init__(name, model, tools, mcp_servers, instructions, content_type)
+class CommsAgent(LangGraphAgent):
+    def __init__(self, model_configs):
+        agent_configs = read_config()
+        # Model - Brain
+        if model_configs['PLATFORM'] == "GOOGLE":
+            brain = ChatGoogleGenerativeAI(model=model_configs['MODEL'])
+
+        elif model_configs['PLATFORM'] == "OPENAI":
+            brain = ChatOpenAI(model=model_configs['MODEL'], base_url=model_configs['BASE_URL'])
+
+        else:
+            raise "Platform not supported"
         
-        self.agent = Agent(
-            name=self.name,
-            model=self.model,
-            instructions=self.SYSTEM_INSTRUCTION,
-            tools=self.tools if self.tools else [],
-            mcp_servers=self.mcp_servers,
-            model_settings=ModelSettings(tool_choice="auto"),
-        )
+        # Agent - Instructions
+        card = agent_configs['card']
+        skills = agent_configs['skills']
+        host = agent_configs['host']
+        port = agent_configs['port']
+        streaming = agent_configs.get('streaming', False)
+        instructions = " ".join(agent_configs['SYSTEM_INSTRUCTIONS']) if type(agent_configs['SYSTEM_INSTRUCTIONS']) == list else agent_configs['SYSTEM_INSTRUCTIONS']
+        content_type = agent_configs['SUPPORTED_CONTENT_TYPES']
 
-    # IMPORTANT
-    # https://langchain-ai.github.io/langgraph/agents/mcp/
-    # giống với đã sửa bên data_agent
+        # Tools - Actions
+        import asyncio
+        client = MultiServerMCPClient(agent_configs['mcp_server'])
+        tools = asyncio.get_event_loop().run_until_complete(client.get_tools())
 
-    async def invoke(self, query, sessionId):
-        input = [{"role": "user", "content": query}]
-        result = await Runner.run(starting_agent=self.agent, input=input, max_turns=5)#, tracing_disbale = True
-        return result.final_output # return ở đây
-
-        # lấy thông tin từ result rồi tạo phản hồi mới dựa trên đó
-        # new_input = result.to_input_list() + [{"role": "user", "content": message}]
-
-#     async def stream(mcp_server: MCPServer):
-#         """Ví dụ nâng cao với progress tracking"""
-        
-#         result_stream = Runner.run_streamed(
-#             starting_agent=agent,
-#             input=[{"role": "user", "content": query}],
-#             max_turns=10
-#         )
-        
-#         partial_response = ""
-#         import time
-#         import json
-
-#         async for event in result_stream.stream_events():
-#             # Xử lý raw response events
-#             if hasattr(event, 'data') and hasattr(event.data, 'type') and event.data.type == 'response.output_text.delta':
-#                 delta_text = event.data.delta
-#                 partial_response += delta_text
-#                 print(f"{delta_text}", end='', flush=True)
-#                 time.sleep(0.5)
-            
-#             # Xử lý tool calls
-#             elif hasattr(event, 'name') and event.name=='tool_called':
-#                 if hasattr(event.item, 'raw_item'):
-#                     print("Begin call tool:", event.item.raw_item.name, 'with input:', event.item.raw_item.arguments, '\n')
-
-#             # Xử lý tool outputs
-#             elif hasattr(event, 'name') and event.name=='tool_output':
-#                 if hasattr(event.item, 'raw_item'):
-#                     tool_output = json.loads(event.item.raw_item.get('output', {})) #  # out của function_calling tổ chức theo json dưới dạng text -> chuyển text thành json
-#                     tool_output = json.loads(tool_output.get('text', {})) # out của tool dạng text -> chuyển thành json
-#                     print("*" * 50, '\n')
-#                     print("tool output:", tool_output.get('status', 'unknow status'))
-#                     print('response:', tool_output.get('response', 'None'))
-#                     print('prompt:', tool_output.get('prompt', 'None'))
-#                     print('more_info:', tool_output.get('more_info', 'None'))
-#                     print("*" * 50, '\n')
-
-#             # SAU KHI CÓ OUTPUT THÌ TUỲ VÀO NÓ MÀ THỰC HIỆN BƯỚC TIẾP THEO
-
-#             # Agent updates
-#             elif hasattr(event, 'new_agent') and hasattr(event.new_agent, 'name'):
-#                 print(f"Agent switched to: {event.new_agent.name}", '\n')
+        # Initialize
+        super().__init__(card, skills, host, port, streaming,
+                         brain, tools, 
+                         instructions, content_type)
 
 
-async def main():
+async def get_result(result):
+    async for r in result:
+        print(r)
+if __name__ == "__main__":
+    import asyncio
     query = """
 Hãy viết cho tôi một nội dung với các yêu cầu sau:
 
@@ -118,23 +77,7 @@ Hướng dẫn ngắn gọn cách sử dụng sản phẩm để đạt hiệu q
 Kêu gọi hành động (Call to Action): Khám phá ngay
 Thông tin bổ sung: Ưu đãi chỉ áp dụng khi mua hàng qua website chính thức và có hiệu lực đến hết ngày 30/06/2025.
 """
-    model= "gemini-2.0-flash"
-
-    server = MCPServerSse(
-        name="SSE Python Server",
-        params={
-            "url": "http://localhost:8000/sse",
-        },
-    )
-    await server.connect()
-
-
-    comms_agent = CommsAgent('comms_agent', model, mcp_servers=[server])
-    result = await comms_agent.invoke(query, '1')
-    print(result)
-
-
-    await server.cleanup()
-
-if __name__ == "__main__":
-    asyncio.run(main())
+    
+    agent = CommsAgent({'PLATFORM': 'GOOGLE', 'MODEL': 'gemini-2.0-flash', 'BASE_URL': None})
+    result = agent.stream(query, '1')
+    asyncio.get_event_loop().run_until_complete(get_result(result))

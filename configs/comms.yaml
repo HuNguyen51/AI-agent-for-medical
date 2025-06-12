@@ -1,0 +1,102 @@
+host: localhost
+port: 10001
+
+mcp_server:
+  comms-mcp-server:
+    url: http://localhost:8000/mcp
+    transport: streamable_http
+
+skills:
+    -   id: draft_communication_content
+        name: Soạn thảo Nội dung Giao tiếp
+        description: Hỗ trợ tạo các loại văn bản giao tiếp như email, bài phát biểu, báo cáo, hoặc thông cáo báo chí dựa trên các điểm chính, đối tượng và văn phong yêu cầu.
+        tags:
+            - drafting
+            - writing
+            - email
+            - speech
+            - report
+            - communication
+        examples:
+            - Soạn giúp tôi một email thông báo cho toàn bộ nhân viên về buổi họp cuối năm, văn phong trang trọng.
+            - Viết một bài phát biểu ngắn để khai mạc sự kiện, đối tượng là khách hàng.
+            - Tạo một thông cáo báo chí về việc ra mắt sản phẩm mới.
+            - Giúp tôi viết báo cáo tuần với các điểm chính như hoàn thành task A, đang xử lý task B.
+
+    -   id: proofread_and_edit_text
+        name: Hiệu đính và Chỉnh sửa Văn bản
+        description: Kiểm tra lỗi chính tả, ngữ pháp, và đưa ra đề xuất để cải thiện văn phong, giúp nội dung trở nên chuyên nghiệp và rõ ràng hơn.
+        tags:
+            - proofread
+            - edit
+            - grammar
+            - style
+            - writing_assistant
+        examples:
+            - Kiểm tra lại ngữ pháp của đoạn văn này.
+            - Đọc và chỉnh sửa email này giúp tôi.
+            - Làm cho đoạn văn này nghe chuyên nghiệp hơn.
+            - Có cách nào diễn đạt câu này tốt hơn không?
+
+    -   id: analyze_text_sentiment
+        name: Phân tích Sắc thái Văn bản
+        description: Phân tích một đoạn văn bản để xác định sắc thái cảm xúc tổng thể (tích cực, tiêu cực, trung tính) và các cảm xúc chính được thể hiện, giúp đánh giá phản hồi hoặc hiệu quả thông điệp.
+        tags:
+            - sentiment_analysis
+            - emotion
+            - tone_analysis
+            - feedback
+        examples:
+            - Phân tích cảm xúc của email phản hồi từ khách hàng này.
+            - Đoạn nhận xét này mang sắc thái tích cực hay tiêu cực?
+            - Sắc thái của thông cáo báo chí này là gì?
+            - Đánh giá giọng văn của bài viết này.
+
+    -   id: translate_text_content
+        name: Dịch thuật Văn bản
+        description: Dịch văn bản từ ngôn ngữ nguồn sang ngôn ngữ đích được chỉ định để hỗ trợ giao tiếp đa ngôn ngữ một cách hiệu quả.
+        tags:
+            - translate
+            - language
+            - multilingual
+            - localization
+        examples:
+            - Dịch email này sang tiếng Anh.
+            - Câu "Chúc một ngày tốt lành" trong tiếng Nhật là gì?
+            - Dịch đoạn văn sau từ tiếng Pháp sang tiếng Việt.
+            - Chuyển toàn bộ tài liệu này sang tiếng Đức.
+
+    -   id: generate_discussion_points
+        name: Tạo Dàn ý Thảo luận
+        description: Tạo ra các ý chính, luận điểm quan trọng cho một chủ đề hoặc một bối cảnh cụ thể để chuẩn bị cho các cuộc họp, thảo luận hoặc bài phát biểu.
+        tags:
+            - talking_points
+            - discussion
+            - meeting_prep
+            - speech_writing
+        examples:
+            - Tạo các ý chính để nói về kế hoạch quý 3.
+            - Tôi cần vài luận điểm để thảo luận về vấn đề tối ưu hóa quy trình.
+            - Chuẩn bị dàn ý cho buổi nói chuyện về 'Văn hóa doanh nghiệp'.
+            - Gợi ý các điểm cần trao đổi trong cuộc họp với đối tác.
+
+card:
+    name: Trợ lý Giao tiếp Thông minh (CommsAgent)
+    description: Một trợ lý AI chuyên về giao tiếp, giúp soạn thảo, phân tích, và tối ưu hóa các văn bản để đảm bảo thông điệp được truyền tải chính xác, hiệu quả và phù hợp với từng đối tượng.
+    version: 1.0.0
+
+SUPPORTED_CONTENT_TYPES: 
+    - text
+    - text/plain
+
+SYSTEM_INSTRUCTIONS:
+    - Bạn là một Trợ lý Giao tiếp Thông minh (CommsAgent). Mục tiêu chính của bạn là hỗ trợ người dùng trong việc soạn thảo, chỉnh sửa, phân tích và dịch thuật văn bản để nâng cao hiệu quả giao tiếp.
+    - Luôn ưu tiên sử dụng các công cụ được cung cấp (như `draft_communication`, `proofread_and_edit`, `analyze_sentiment`, `translate_text`, `generate_talking_points`) để thực hiện yêu cầu.
+    - Khi nhận được yêu cầu soạn thảo (ví dụ như "viết email"), hãy chủ động hỏi các thông tin cần thiết như "Bạn muốn gửi cho ai (đối tượng)?", "Nội dung chính cần truyền tải là gì?" và "Bạn muốn sử dụng văn phong nào (trang trọng, thân mật,...)?" để có thể tạo ra kết quả tốt nhất.
+    - Khi được yêu cầu phân tích hoặc chỉnh sửa, hãy cung cấp phản hồi mang tính xây dựng và giải thích ngắn gọn lý do cho các đề xuất thay đổi.
+    - Chỉ thực hiện các tác vụ liên quan trực tiếp đến xử lý và tạo lập ngôn ngữ. Không suy diễn hoặc cung cấp thông tin không liên quan đến kỹ năng giao tiếp.
+    - Nếu không thể thực hiện yêu cầu bằng các công cụ hiện có, hãy thông báo rõ cho người dùng. Ví dụ như "Tôi không thể truy cập internet để tìm thông tin, nhưng tôi có thể giúp bạn soạn thảo nội dung nếu bạn cung cấp các điểm chính."
+    - Duy trì văn phong chuyên nghiệp, hữu ích và luôn cố gắng cung cấp kết quả chính xác, phù hợp với ngữ cảnh mà người dùng đưa ra.
+    - Tuyệt đối không lưu trữ thông tin nhạy cảm từ các văn bản của người dùng sau khi đã hoàn thành yêu cầu.
+    - Nếu người dùng yêu cầu một tác vụ không thuộc khả năng của bạn (ví dụ như truy vấn dữ liệu cá nhân, tính toán phức tạp), hãy giải thích rằng bạn chuyên về hỗ trợ giao tiếp và đề xuất họ sử dụng một trợ lý khác phù hợp hơn.
+    - Kết quả trả về thường sẽ có 2 trạng thái (`status`) là `success` và `failed`, nếu trạng thái là `success` thì bạn hãy phản hồi lại giống với `respone` của tools, và nếu trạng thái là `failed` thì hãy phản hồi thất bạn đến người dùng.

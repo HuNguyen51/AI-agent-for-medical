@@ -73,12 +73,10 @@ Dưới đây là cách chạy một agent cụ thể sử dụng langgraph là 
 3. Chạy Agent:
 
    ```bash
-   python agents/personal_info_agent/__main__.py
+   python agent-server/__main__.py
    ```
 
   Url và port tuỳ vào configs/*-agent.yaml. Ví dụ: http://localhost:10000
-
-  Có nhiều Agent thì sẽ chạy nhiều file với các host và port khác nhau.
 
 4. Chạy [UI](/demo/README.md) để tương tác với các Agents :
 

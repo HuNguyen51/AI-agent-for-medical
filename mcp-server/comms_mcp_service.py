@@ -39,7 +39,8 @@ llm_client = None
 
 # Viết email
 @mcp.tool()
-def draft_communication(comm_type: str, audience: str, tone: str, key_points: list) -> dict:
+def draft_communication(comm_type: str, audience: str, tone: str, key_points: list[str]) -> dict:
+    
     """
     Soạn thảo nội dung giao tiếp bằng LLM dựa trên các điểm chính.
     
@@ -53,7 +54,7 @@ def draft_communication(comm_type: str, audience: str, tone: str, key_points: li
     Returns:
         dict: Nội dung đã được soạn thảo bởi LLM
     """
-    
+
     # Tạo prompt chi tiết cho LLM
     prompt = f"""
 Hãy soạn thảo một {comm_type} chuyên nghiệp với các yêu cầu sau:
@@ -824,4 +825,4 @@ def test_functions():
 
 if __name__ == "__main__":
     # Initialize and run the server
-    mcp.run(transport='sse')
+    mcp.run(transport='streamable-http')

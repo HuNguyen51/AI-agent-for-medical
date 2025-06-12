@@ -22,6 +22,7 @@ class BaseAgent:
                  host,
                  port,
                  model, 
+                 streaming: bool = False,
                  tools: list = None, 
                  instructions: str = None, 
                  content_type: list = None):
@@ -30,6 +31,8 @@ class BaseAgent:
         self.skills = skills
         self.host = host
         self.port = port
+
+        self.streaming = streaming
     
         self.model = model
         self.tools = tools
@@ -57,11 +60,12 @@ class LangGraphAgent(BaseAgent):
                  host,
                  port,
                  model, 
+                 streaming: bool=False,
                  tools: list=[], 
                  instructions: str="Bạn là một trợ lý hữu ích.", 
                  content_type: list=['text', 'text/plain']):
         
-        super().__init__(card, skills, host, port, model, tools, instructions, content_type)
+        super().__init__(card, skills, host, port, model, streaming, tools, instructions, content_type)
 
         self.graph = create_react_agent(
             model=self.model,

@@ -21,7 +21,7 @@ class Runner:
     def run(self):
         """Start the server."""
         try:
-            capabilities = AgentCapabilities(streaming=True, pushNotifications=True)
+            capabilities = AgentCapabilities(streaming=self.agent.streaming, pushNotifications=True)# streaming: False=invoke | True=stream
             skills = []
             for skill in self.agent.skills:
                 skills.append(

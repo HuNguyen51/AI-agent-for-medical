@@ -1,4 +1,9 @@
-data_agent:
+data:
+    PLATFORM: GOOGLE
+    MODEL: gemini-2.0-flash
+    BASE_URL: Null
+
+comms:
     PLATFORM: GOOGLE
     MODEL: gemini-2.0-flash
     BASE_URL: Null

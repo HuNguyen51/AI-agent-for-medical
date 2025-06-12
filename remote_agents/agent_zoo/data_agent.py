@@ -19,15 +19,18 @@ from langchain_openai import ChatOpenAI
 
 
 # Read config
-with open("./configs/vectorstore.yaml") as f:
-    vector_configs: dict = yaml.safe_load(f)
+def read_config():
+    with open("./configs/vectorstore.yaml") as f:
+        vector_configs: dict = yaml.safe_load(f)
 
-with open("./configs/data.yaml") as f:
-    agent_configs: dict = yaml.safe_load(f)
+    with open("./configs/data.yaml") as f:
+        agent_configs: dict = yaml.safe_load(f)
+    return vector_configs, agent_configs
 
 
 class DataAgent(LangGraphAgent):
     def __init__(self, model_configs):
+        vector_configs, agent_configs = read_config()
         # Model - Brain
         if model_configs['PLATFORM'] == "GOOGLE":
             brain = ChatGoogleGenerativeAI(model=model_configs['MODEL'])
@@ -43,6 +46,7 @@ class DataAgent(LangGraphAgent):
         skills = agent_configs['skills']
         host = agent_configs['host']
         port = agent_configs['port']
+        streaming = agent_configs.get('streaming', False)
         instructions = " ".join(agent_configs['SYSTEM_INSTRUCTIONS']) if type(agent_configs['SYSTEM_INSTRUCTIONS']) == list else agent_configs['SYSTEM_INSTRUCTIONS']
         content_type = agent_configs['SUPPORTED_CONTENT_TYPES']
 
@@ -51,7 +55,7 @@ class DataAgent(LangGraphAgent):
         tools = [retriever_tool]
 
         # Initialize
-        super().__init__(card, skills, host, port, 
+        super().__init__(card, skills, host, port, streaming,
                          brain, tools, 
                          instructions, content_type)
 

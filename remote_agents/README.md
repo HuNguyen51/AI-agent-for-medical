@@ -4,7 +4,7 @@ Các AI Agents được xây dựng bằng [LangGraph](https://langchain-ai.gith
 
 ## Cơ cấu hoạt động
 
-Tác nhân này sử dụng LangGraph với Google Gemini để cung cấp thông tin trao đổi thông qua ReAct agent pattern. Giao thức A2A cho phép tương tác chuẩn hóa với Agent, cho phép user gửi yêu cầu và nhận cập nhật theo thời gian thực.
+Tác nhân này sử dụng LangGraph với Google Gemini để cung cấp thông tin trao đổi thông qua ReAct Agent pattern. Giao thức A2A cho phép tương tác chuẩn hóa với Agent, cho phép user gửi yêu cầu và nhận cập nhật theo thời gian thực.
 
 Ví dụ cơ bản về cách giao thức A2A chạy với DataAgent:
 
@@ -16,7 +16,7 @@ sequenceDiagram
     participant Retriever as LangChain Retriever
 
     Client->>Server: Gửi task truy vấn dữ liệu
-    Server->>Agent:  Chuyển tiếp task tới Personal Agent
+    Server->>Agent:  Chuyển tiếp task tới Data Agent
 
     alt Complete Information
         Agent->>Retriever: Gọi data_retriever_tool
