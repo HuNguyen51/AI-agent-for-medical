@@ -1,6 +1,6 @@
-# AI Agents for CEO
+# AI Agent to Agents
 
-Dự án Agents là hệ thống đa tác nhân A2A (Agent-to- Agent) được thiết kế để cộng tác trong các tác vụ của người dùng. Dự án sử dụng Retrieval- Augmented Generation (RAG) làm công cụ để truy vấn dữ liệu và trả lời câu hỏi, và MCP để xác định và tích hợp các công cụ có thể truy cập vào LLM và agent.
+Dự án Agents là hệ thống đa tác nhân A2A (Google: Agent-to-Agent) được thiết kế để cộng tác trong các tác vụ của người dùng. Dự án sử dụng Retrieval- Augmented Generation (RAG) làm công cụ để truy vấn dữ liệu và trả lời câu hỏi, và MCP để xác định và tích hợp các công cụ có thể truy cập vào LLM và agent.
 
 [*Đang ở giai đoạn đầu phân tích và phát triển...*]
 
