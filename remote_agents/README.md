@@ -6,7 +6,7 @@ Các AI Agents được xây dựng bằng [LangGraph](https://langchain-ai.gith
 
 Tác nhân này sử dụng LangGraph với Google Gemini để cung cấp thông tin trao đổi thông qua ReAct Agent pattern. Giao thức A2A cho phép tương tác chuẩn hóa với Agent, cho phép user gửi yêu cầu và nhận cập nhật theo thời gian thực.
 
-Ví dụ cơ bản về cách giao thức A2A chạy với DataAgent:
+Ví dụ cơ bản về cách giao thức A2A chạy:
 
 ```mermaid
 sequenceDiagram
